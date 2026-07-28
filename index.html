@@ -432,7 +432,8 @@
                         <li class="menu-item" onclick="switchTab('customizeTab', this)"><span style="font-size:14px;">⚙️</span> <span data-i18n="customize">Customize & Theme</span></li>
                         <li class="menu-item" onclick="switchTab('linksTab', this)"><span style="font-size:14px;">🔗</span> <span data-i18n="links">Link Management</span></li>
                         <li class="menu-item" onclick="switchTab('badgesTab', this)"><span style="font-size:14px;">🛡️</span> <span data-i18n="badges">Badges</span></li>
-                        <li class="menu-item" id="adminMenuLink" style="display: none; color: #f87171;" onclick="switchTab('adminTab', this)"><span style="font-size:14px;">👑</span> <span data-i18n="admin">Admin Panel</span></li>
+                        <!-- YÖNETİCİ PANELİ (SADECE UID 1 İÇİN GÖRÜNÜR) -->
+                        <li class="menu-item" id="adminMenuLink" style="color: #f87171; display: none;" onclick="switchTab('adminTab', this)"><span style="font-size:14px;">👑</span> <span data-i18n="admin">Admin Panel</span></li>
                     </ul>
                 </div>
 
@@ -560,19 +561,33 @@
                     <div id="userBadgesList" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
                 </div>
 
+                <!-- ADMIN PANELİ (SADECE UID 1 İÇİN ÇALIŞIR) -->
                 <div id="adminTab" class="panel-section">
                     <div class="section-title" style="display: flex; align-items: center; gap: 8px;">
                         <span>👑</span> <span data-i18n="adminPanel">System Administration</span>
                     </div>
+
                     <div class="cards-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:15px; margin-bottom:20px;">
                         <div class="settings-card">
                             <div style="color:var(--text-muted); font-size:12px;">Toplam Kayıtlı Kullanıcı</div>
                             <div style="font-size:22px; font-weight:bold;" id="adminTotalUsersCount">0</div>
                         </div>
                     </div>
+
+                    <!-- İNVİTE CODE GENERATOR -->
+                    <div class="settings-card" style="margin-bottom: 20px;">
+                        <div style="color:var(--text-muted); font-size:12px; margin-bottom:5px; font-weight:bold;">🎟️ Invite Code Generator (Supabase Bağlantılı)</div>
+                        <button onclick="generateDatabaseInviteKey()" style="padding: 10px; font-size: 14px; background: #10b981; color: #ffffff; margin-top: 0;">🎲 Yeni Invite Kodu Oluştur ve Kaydet</button>
+                        <div style="color:var(--text-muted); font-size:11px; margin-top:8px;">Veritabanındaki Aktif/Kullanılmış Invite Kodları (Kopyalamak İçin Tıkla):</div>
+                        <div id="databaseInvitesListContainer" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 180px; overflow-y: auto; margin-top: 8px;">
+                            <!-- Dinamik Liste -->
+                        </div>
+                    </div>
+
+                    <!-- KULLANICI LOGLARI TABLOSU -->
                     <div class="settings-card">
                         <div style="color:var(--text-muted); font-size:12px; margin-bottom:10px; font-weight:bold;">Kayıt Olan Kullanıcılar (Loglar)</div>
-                        <div style="max-height: 300px; overflow-y: auto;">
+                        <div style="max-height: 250px; overflow-y: auto;">
                             <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
                                 <thead>
                                     <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-muted);">
@@ -716,7 +731,7 @@
                 viewPage: "Səhifəmi Gör", signOut: "Çıxış", accOverview: "Hesaba Ümumi Baxış", usernameLbl: "İstifadəçi Adı", profileViews: "Profil Baxışları",
                 fileUploaders: "Fayl Yükləyiciləri", bgUploadLbl: "Arxa Plan (GIF / Video)", uploadFile: "Fayl yüklə", avatarUploadLbl: "Profil Avatarı (GIF)", bannerUploadLbl: "Banner (Üstlük)",
                 audioUploadLbl: "Profil Musiqi/Səs", selectAudio: "Səs faylı seç", removeBtn: "Sil", generalCustom: "Ümumi Fərdiləşdirmə", bioLabel: "Haqqında (Bio)",
-                locationLabel: "Məkan", opacityLabel: "Profil Opaşitliyi", blurLabel: "Profil Bulanığı", saveBtn: "Dəyişiklikləri Yadda Saxla",
+                locationLabel: "Məkan", opacityLabel: "Profil Opaşitliyi", blurLabel: "Profil Bulanığı", saveBtn: "Dəyişiklikləri Yadda Saxla",
                 socialLinkTitle: "Sosial media profillərini bağla.", socialLinkSub: "Əlavə etmək üçün sosial media seçin.", activeBadges: "Aktiv Nişanlarınız",
                 adminPanel: "Sistem İdarəetməsi", totalUsers: "Qeydiyyatdaki İstifadəçilər", activeInvites: "Aktiv Dəvətlər", genInvite: "Dəvət Kodu Yarat",
                 genBtn: "🎲 Yarat", backBtn: "Geri", noLocation: "📍 Məkan qeyd olunmayıb", successLang: "Dil dəyişdirildi."
@@ -767,7 +782,7 @@
 
             const t = translations[code];
             if (t) {
-                document.getElementById('authHeading').innerText = t.signIn;
+                document.getElementById('authHeading').innerText = isRegisterMode ? (t ? t.signUpTrigger : "Sign Up") : (t ? t.signIn : "Sign In");
                 document.getElementById('authSubheading').innerText = t.subIn;
                 document.getElementById('authUsername').placeholder = t.usernamePH;
                 document.getElementById('authPassword').placeholder = t.passwordPH;
@@ -841,10 +856,6 @@
         let currentUser = null;
         let isRegisterMode = false;
         const ADMIN_UID = 1;
-
-        if (!localStorage.getItem('custom_invite_keys')) {
-            localStorage.setItem('custom_invite_keys', JSON.stringify(["MENACE-1337", "ORVIN-2026", "VIP-KEY-999"]));
-        }
 
         let db;
         const dbRequest = indexedDB.open("MenaceMediaDB", 1);
@@ -1182,6 +1193,7 @@
             document.getElementById('authMessage').innerText = "";
             document.getElementById('rememberMeRow').style.display = isRegisterMode ? "none" : "flex";
             document.getElementById('authInviteKey').style.display = isRegisterMode ? "block" : "none";
+            document.getElementById('authHeading').innerText = isRegisterMode ? (t ? t.signUpTrigger : "Sign Up") : (t ? t.signIn : "Sign In");
             document.getElementById('authActionBtn').innerText = isRegisterMode ? (t ? t.signUpTrigger : "Sign Up") : (t ? t.signBtn : "Sign In");
             document.getElementById('lblNoAccount').innerText = isRegisterMode ? "Hesabınız var mı?" : (t ? t.noAcc : "Don't have an account?");
             document.getElementById('authSwitchTrigger').innerText = isRegisterMode ? (t ? t.signBtn : "Sign In") : (t ? t.signUpTrigger : "Sign Up");
@@ -1198,10 +1210,17 @@
 
             if (isRegisterMode) {
                 if (!inviteKey) { msg.innerText = "Davetiye kodu gerekli!"; return; }
-                let activeKeys = JSON.parse(localStorage.getItem('custom_invite_keys') || "[]");
-                let usedKeys = JSON.parse(localStorage.getItem('used_invite_keys') || "[]");
-                if (!activeKeys.includes(inviteKey) && !inviteKey.startsWith("ADMIN")) { msg.innerText = "Geçersiz davetiye kodu!"; return; }
-                if (usedKeys.includes(inviteKey)) { msg.innerText = "Bu davetiye kodu zaten kullanılmış!"; return; }
+                
+                const { data: inviteData, error: inviteErr } = await supabaseClient.from('invites').select('*').eq('code', inviteKey).single();
+                
+                if (inviteErr || !inviteData) {
+                    msg.innerText = "Geçersiz davetiye kodu!";
+                    return;
+                }
+                if (inviteData.is_used) {
+                    msg.innerText = "Bu davetiye kodu daha önce kullanılmış!";
+                    return;
+                }
 
                 showToast("Başarılı", `Hoş geldin @${username}, hesap oluşturuluyor...`, "🎉");
                 const { count } = await supabaseClient.from('profiles').select('*', { count: 'exact', head: true });
@@ -1210,8 +1229,10 @@
                 const { data: newUser, error } = await supabaseClient.from('profiles').insert([{ username, password, uid: newUid }]).select().single();
                 if (error) { msg.innerText = error.message; return; }
 
-                usedKeys.push(inviteKey); localStorage.setItem('used_invite_keys', JSON.stringify(usedKeys));
-                currentUser = newUser; localStorage.setItem('remembered_username', newUser.username);
+                await supabaseClient.from('invites').update({ is_used: true }).eq('code', inviteKey);
+
+                currentUser = newUser; 
+                localStorage.setItem('remembered_username', newUser.username);
                 initUserSession();
             } else {
                 showToast("Başarılı", `Giriş yapılıyor, @${username}...`, "🚀");
@@ -1253,10 +1274,11 @@
             let views = parseInt(localStorage.getItem('views_' + currentUser.username) || "0");
             document.getElementById('sumViews').innerText = views;
 
-            let isAdmin = (currentUser.uid || 1) === ADMIN_UID;
-            if (isAdmin) {
+            // SADECE UID 1 İSE YÖNETİCİ PANELİNİ GÖSTER
+            if (parseInt(currentUser.uid) === 1) {
                 document.getElementById('adminMenuLink').style.display = 'flex';
                 loadAdminPanelData();
+                loadDatabaseInvites();
             } else {
                 document.getElementById('adminMenuLink').style.display = 'none';
             }
@@ -1284,7 +1306,10 @@
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             el.classList.add('active');
-            if (tabId === 'adminTab') loadAdminPanelData();
+            if (tabId === 'adminTab' && parseInt(currentUser.uid) === 1) {
+                loadAdminPanelData();
+                loadDatabaseInvites();
+            }
         }
 
         function getSavedLinks() { return JSON.parse(localStorage.getItem('links_' + currentUser.username) || "[]"); }
@@ -1407,8 +1432,53 @@
             badges.forEach(b => { list.innerHTML += b; publicBadges.innerHTML += b; });
         }
 
+        async function generateDatabaseInviteKey() {
+            if (parseInt(currentUser.uid) !== ADMIN_UID) return;
+            let randomCode = 'MENACE-' + Math.random().toString(36).substring(2, 8).toUpperCase() + '-' + Math.floor(1000 + Math.random() * 9000);
+            
+            const { error } = await supabaseClient.from('invites').insert([{ code: randomCode, is_used: false }]);
+            if (error) {
+                showToast("Hata", "Kod üretilirken hata oluştu!", "❌");
+                return;
+            }
+
+            loadDatabaseInvites();
+            showToast("Başarılı", `Yeni davetiye üretildi: ${randomCode}`, "🎟️");
+        }
+
+        async function loadDatabaseInvites() {
+            if (parseInt(currentUser.uid) !== ADMIN_UID) return;
+            const { data: invites, error } = await supabaseClient.from('invites').select('*');
+            if (error) return;
+
+            let container = document.getElementById('databaseInvitesListContainer');
+            container.innerHTML = "";
+
+            if (!invites || invites.length === 0) {
+                container.innerHTML = `<span style="font-size:12px; color:var(--text-muted);">Veritabanında henüz davetiye kodu bulunmuyor.</span>`;
+                return;
+            }
+
+            invites.forEach(inv => {
+                let isUsed = inv.is_used;
+                let badgeColor = isUsed ? 'background: rgba(239, 68, 68, 0.2); color: #f87171; border-color: rgba(239,68,68,0.4);' : 'background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16,185,129,0.4);';
+                let statusText = isUsed ? ' (Kullanıldı)' : ' (Aktif)';
+
+                container.innerHTML += `
+                    <div onclick="copyToClipboard('${inv.code}')" style="${badgeColor} border:1px solid var(--border-color); padding:6px 10px; border-radius:8px; font-size:12px; cursor:pointer; font-weight:600; display:inline-flex; align-items:center; gap:6px;" title="Kopyalamak için tıkla">
+                        <span>🎟️</span> <b>${inv.code}</b> <span style="font-size:10px; opacity:0.8;">${statusText}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            showToast("Kopyalandı", `${text} panoya kopyalandı!`, "📋");
+        }
+
         async function loadAdminPanelData() {
-            if ((currentUser.uid || 1) !== ADMIN_UID) return;
+            if (parseInt(currentUser.uid) !== ADMIN_UID) return;
             const { data: users, error } = await supabaseClient.from('profiles').select('*');
             if (error) return;
             
@@ -1417,7 +1487,7 @@
             let tbody = document.getElementById('adminUserLogsTableBody');
             tbody.innerHTML = "";
             if (users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="2" style="padding: 10px; color: var(--text-muted);">Henüz kayıtlı kullanıcı bulunmuyor.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="2" style="padding: 10px; color: var(--text-muted);">Henüz kayıt olunan kullanıcı bulunmuyor.</td></tr>`;
                 return;
             }
 
