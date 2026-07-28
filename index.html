@@ -8,13 +8,13 @@
     <style>
         :root {
             --bg-pure-black: #050508;
-            --sidebar-bg: #111116;
-            --card-bg: #16161d;
+            --sidebar-bg: #09090c;
+            --card-bg: #121217;
             --border-color: rgba(255, 255, 255, 0.08);
             --text-normal: #ffffff;
             --text-muted: #8b8b9e;
-            --accent: #8b5cf6;
-            --accent-hover: #7c3aed;
+            --accent: #ffffff; /* Vurgular artık temiz beyaz/gri tonlarında */
+            --accent-hover: #ffffff;
             --danger: #ef4444;
             --success: #10b981;
         }
@@ -38,269 +38,144 @@
             filter: brightness(0.3); 
         }
 
-        /* ŞIK VE AKICI KANVAS ANİMASYONLU ARKA PLAN (Giriş/Kayıt için) */
         #authCanvasBackground {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background-color: #050508;
             z-index: -2;
             transition: opacity 0.6s ease;
         }
 
-        /* SOL ALT KÖŞE DİL SEÇİCİ WIDGET (Sadece Giriş/Kayıt Ekranında Görünür) */
         .language-selector-container {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            z-index: 400;
-            display: flex;
+            position: fixed; bottom: 25px; left: 25px; z-index: 400; display: flex;
         }
 
         .lang-dropdown-btn {
-            background: rgba(22, 22, 29, 0.85);
+            background: rgba(18, 18, 23, 0.85);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             border: 1px solid var(--border-color);
             color: var(--text-normal);
-            padding: 8px 14px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
+            padding: 8px 14px; border-radius: 12px;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; font-size: 13px; font-weight: 600;
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            transition: 0.2s;
+            transition: 0.3s;
         }
-        .lang-dropdown-btn:hover {
-            border-color: var(--accent);
-            background: rgba(22, 22, 29, 0.95);
-        }
+        .lang-dropdown-btn:hover { border-color: rgba(255,255,255,0.25); background: rgba(25, 25, 32, 0.95); }
 
         .lang-menu {
-            position: absolute;
-            bottom: 50px;
-            left: 0;
-            background: rgba(22, 22, 29, 0.95);
+            position: absolute; bottom: 50px; left: 0;
+            background: rgba(18, 18, 23, 0.95);
             backdrop-filter: blur(18px);
             border: 1px solid var(--border-color);
-            border-radius: 14px;
-            width: 220px;
-            max-height: 280px;
-            overflow-y: auto;
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            padding: 8px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            z-index: 410;
+            border-radius: 14px; width: 220px; max-height: 280px;
+            overflow-y: auto; display: none; flex-direction: column; gap: 4px; padding: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7); z-index: 410;
         }
         .lang-menu.show { display: flex; }
 
         .lang-option {
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-muted);
-            transition: 0.2s;
+            padding: 8px 12px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; gap: 10px; font-size: 13px;
+            color: var(--text-muted); transition: 0.2s;
         }
         .lang-option:hover, .lang-option.active {
-            background: rgba(139, 92, 246, 0.15);
-            color: var(--text-normal);
+            background: rgba(255, 255, 255, 0.08); color: var(--text-normal);
         }
         
         .flag-circle-img {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            flex-shrink: 0;
+            width: 22px; height: 22px; border-radius: 50%; object-fit: cover;
+            border: 1px solid rgba(255, 255, 255, 0.15); flex-shrink: 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        /* SAĞ ÜST SES KONTROL WIDGET */
         .audio-control-widget {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            background: rgba(22, 22, 29, 0.85);
-            backdrop-filter: blur(14px);
-            border: 1px solid var(--border-color);
-            padding: 10px 16px;
-            border-radius: 12px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-            z-index: 300;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            position: fixed; top: 25px; right: 25px;
+            background: rgba(18, 18, 23, 0.85); backdrop-filter: blur(14px);
+            border: 1px solid var(--border-color); padding: 10px 16px;
+            border-radius: 12px; display: none; align-items: center; gap: 10px;
+            z-index: 300; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .audio-control-widget span { font-size: 14px; }
-        .audio-control-widget input[type=range] { width: 90px; accent-color: var(--accent); cursor: pointer; margin: 0; }
+        .audio-control-widget input[type=range] { width: 90px; accent-color: #ffffff; cursor: pointer; margin: 0; }
 
-        /* SOL ÜST MODERN ÇIKIŞ BUTONU */
         .top-left-controls { position: fixed; top: 25px; left: 25px; display: flex; gap: 10px; z-index: 350; }
         .close-profile-btn { 
-            background: rgba(22, 22, 29, 0.85); 
-            backdrop-filter: blur(14px);
-            border: 1px solid var(--border-color); 
-            color: white; 
-            padding: 10px 18px; 
-            border-radius: 12px; 
-            display: flex; 
-            align-items: center; 
-            gap: 8px;
-            cursor: pointer; 
-            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            font-size: 13px; 
-            font-weight: 600; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: rgba(18, 18, 23, 0.85); backdrop-filter: blur(14px);
+            border: 1px solid var(--border-color); color: white; padding: 10px 18px; 
+            border-radius: 12px; display: flex; align-items: center; gap: 8px;
+            cursor: pointer; transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
-        .close-profile-btn:hover { 
-            background: var(--danger); 
-            border-color: var(--danger); 
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(239, 68, 68, 0.4);
-        }
+        .close-profile-btn:hover { background: var(--danger); border-color: var(--danger); transform: translateY(-2px); }
 
-        /* MODERN ANİMASYONLU TOAST BİLDİRİM SİSTEMİ */
         #toastNotification {
-            position: fixed;
-            top: 25px;
-            right: 25px;
-            transform: translateX(130%) scale(0.9);
-            opacity: 0;
-            background: rgba(22, 22, 29, 0.92);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-left: 4px solid var(--accent);
-            color: white;
-            padding: 16px 22px;
-            border-radius: 14px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(139, 92, 246, 0.15);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            gap: 14px;
+            position: fixed; top: 25px; right: 25px;
+            transform: translateX(130%) scale(0.9); opacity: 0;
+            background: rgba(18, 18, 23, 0.95); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15); border-left: 4px solid #ffffff;
+            color: white; padding: 16px 22px; border-radius: 14px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 255, 255, 0.05);
+            z-index: 99999; display: flex; align-items: center; gap: 14px;
             transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
-            font-size: 14px;
-            pointer-events: none;
+            font-size: 14px; pointer-events: none;
         }
-        #toastNotification.show {
-            transform: translateX(0) scale(1);
-            opacity: 1;
-        }
+        #toastNotification.show { transform: translateX(0) scale(1); opacity: 1; }
         .toast-icon-wrapper {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            flex-shrink: 0;
-            box-shadow: inset 0 0 10px rgba(139, 92, 246, 0.3);
-            animation: pulseGlow 2s infinite;
-        }
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08); display: flex;
+            align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
         }
 
-        /* AUTH CONTAINER & GİRİŞ KUTUSU ANİMASYONLARI */
-        .auth-container {
-            display: flex; align-items: center; justify-content: center;
-            height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; z-index: 200;
-        }
+        .auth-container { display: flex; align-items: center; justify-content: center; height: 100vh; width: 100vw; position: absolute; top: 0; left: 0; z-index: 200; }
         .auth-box {
-            background-color: rgba(22, 22, 29, 0.82);
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 400px;
-            box-sizing: border-box; box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(139, 92, 246, 0.08);
-            text-align: center;
-            animation: authBoxEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .auth-box::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
-            z-index: -1;
-            pointer-events: none;
-            animation: rotateGlow 10s linear infinite;
-        }
-        @keyframes rotateGlow {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes authBoxEntrance {
-            0% { opacity: 0; transform: translateY(30px) scale(0.95); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
+            background-color: rgba(14, 14, 18, 0.85); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08); padding: 40px 30px; border-radius: 20px; width: 100%; max-width: 400px;
+            box-sizing: border-box; box-shadow: 0 30px 60px rgba(0,0,0,0.9); text-align: center;
         }
 
         input[type=text], input[type=password], input[type=url], input[type=number], textarea, select {
             width: 100%; padding: 12px; margin: 8px 0;
-            background-color: rgba(0, 0, 0, 0.4); color: var(--text-normal);
-            border: 1px solid var(--border-color); border-radius: 8px; outline: none;
-            box-sizing: border-box; font-size: 14px; font-family: inherit;
-            transition: all 0.3s ease;
+            background-color: rgba(0, 0, 0, 0.5); color: var(--text-normal);
+            border: 1px solid var(--border-color); border-radius: 10px; outline: none;
+            box-sizing: border-box; font-size: 14px; font-family: inherit; transition: 0.3s;
         }
-        input:focus, textarea:focus, select:focus { 
-            border-color: var(--accent); 
-            box-shadow: 0 0 12px rgba(139, 92, 246, 0.3);
-            background-color: rgba(0, 0, 0, 0.6);
-        }
+        input:focus, textarea:focus, select:focus { border-color: rgba(255, 255, 255, 0.3); background-color: rgba(0, 0, 0, 0.75); box-shadow: 0 0 15px rgba(255,255,255,0.05); }
 
-        .remember-me-row {
-            display: flex; align-items: center; gap: 8px; margin: 12px 0 4px 0;
-            font-size: 13px; color: var(--text-muted); cursor: pointer; text-align: left;
-        }
-        .remember-me-row input { cursor: pointer; accent-color: var(--accent); width: 16px; height: 16px; }
+        .remember-me-row { display: flex; align-items: center; gap: 8px; margin: 12px 0 4px 0; font-size: 13px; color: var(--text-muted); cursor: pointer; text-align: left; }
+        .remember-me-row input { cursor: pointer; accent-color: #ffffff; width: 16px; height: 16px; }
 
+        /* YENİ SEXY, SİYAH VE ANİMASYONLU BUTONLAR */
         button {
-            width: 100%; padding: 12px; margin-top: 10px;
-            background-color: var(--accent); color: #ffffff; border: none;
-            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; 
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            width: 100%; padding: 13px; margin-top: 10px; 
+            background: linear-gradient(135deg, #1a1a24 0%, #111116 100%);
+            color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; 
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+            position: relative; overflow: hidden;
+        }
+        button::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+            transition: 0.5s;
         }
         button:hover { 
-            background-color: var(--accent-hover); 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+            background: linear-gradient(135deg, #242433 0%, #16161d 100%);
+            border-color: rgba(255, 255, 255, 0.35); 
+            transform: translateY(-2px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.08);
         }
-        button:active { transform: translateY(0); }
+        button:hover::after { left: 100%; }
 
-        .message { font-size: 13px; margin-top: 10px; color: var(--danger); animation: shakeMsg 0.4s ease; }
-        @keyframes shakeMsg {
-            0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
-        }
-
+        .message { font-size: 13px; margin-top: 10px; color: var(--danger); }
         .auth-switch-text { margin-top: 15px; font-size: 13px; color: var(--text-muted); }
-        .auth-switch-text span { color: var(--accent); cursor: pointer; font-weight: 600; transition: 0.2s; }
-        .auth-switch-text span:hover { text-decoration: underline; color: #a78bfa; }
-        .invite-buy-link { display: block; margin-top: 15px; font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 600; transition: 0.2s; }
-        .invite-buy-link:hover { text-decoration: underline; color: #a78bfa; }
+        .auth-switch-text span { color: #ffffff; cursor: pointer; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+        .invite-buy-link { display: block; margin-top: 15px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 600; transition: 0.2s; }
+        .invite-buy-link:hover { color: #ffffff; }
 
-        /* DASHBOARD */
         .dashboard-container { display: none; height: 100vh; width: 100vw; box-sizing: border-box; }
         .layout-grid { display: flex; height: 100%; width: 100%; }
 
@@ -308,204 +183,212 @@
             width: 260px; background-color: var(--sidebar-bg); border-right: 1px solid var(--border-color);
             display: flex; flex-direction: column; justify-content: space-between; padding: 20px; box-sizing: border-box; z-index: 10;
         }
-        .sidebar-logo { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; color: var(--text-normal); }
+        .sidebar-logo { font-size: 20px; font-weight: bold; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; color: var(--text-normal); letter-spacing: 0.5px; }
         
-        .menu-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 4px; flex-grow: 1; overflow-y: auto; }
+        .menu-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; flex-grow: 1; overflow-y: auto; }
+        
+        /* ANİMASYONLU & SEXY SİYAH MENÜ ÖĞELERİ */
         .menu-item {
-            padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 13px;
-            color: var(--text-muted); display: flex; align-items: center; gap: 10px; transition: 0.2s;
+            padding: 11px 14px; border-radius: 10px; cursor: pointer; font-size: 13px;
+            color: var(--text-muted); display: flex; align-items: center; gap: 10px; 
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+            background: transparent; border: 1px solid transparent;
         }
-        .menu-item:hover, .menu-item.active { background-color: rgba(139, 92, 246, 0.15); color: var(--text-normal); }
+        .menu-item:hover { 
+            background: rgba(255, 255, 255, 0.04); 
+            color: var(--text-normal); 
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+        .menu-item.active { 
+            background: linear-gradient(135deg, #1f1f2b 0%, #131318 100%); 
+            color: #ffffff; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            transform: translateX(4px);
+        }
 
         .sidebar-user-profile {
             display: flex; align-items: center; gap: 12px; padding: 10px;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
-            border-radius: 12px; cursor: pointer; transition: 0.2s;
+            background: rgba(18, 18, 23, 0.8); border: 1px solid var(--border-color);
+            border-radius: 12px; cursor: pointer; transition: 0.3s;
         }
-        .sidebar-user-profile:hover { border-color: var(--accent); background: rgba(139, 92, 246, 0.1); }
+        .sidebar-user-profile:hover { border-color: rgba(255,255,255,0.25); background: rgba(25, 25, 32, 0.9); }
         .sidebar-user-profile img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
 
         .main-content { flex-grow: 1; padding: 30px; overflow-y: auto; box-sizing: border-box; }
         .panel-section { display: none; }
         .panel-section.active { display: block; }
-        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--text-normal); }
+        .section-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
-        .summary-card {
-            background-color: var(--card-bg); border: 1px solid var(--border-color);
-            border-radius: 14px; padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .summary-card .card-top { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 13px; }
-        .summary-card .card-body { font-size: 18px; font-weight: bold; margin-top: 8px; }
+        .customizer-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .customizer-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px; }
+        .customizer-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
 
-        /* MODERN DOSYA YÜKLEME ALANLARI */
-        .file-upload-box {
-            border: 2px dashed var(--border-color);
-            background: rgba(0, 0, 0, 0.2);
-            padding: 16px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.2s;
-            margin-top: 8px;
-            position: relative;
+        .upload-card-box {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;
+            padding: 15px; text-align: center; position: relative; cursor: pointer; transition: 0.3s; min-height: 80px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
         }
-        .file-upload-box:hover {
-            border-color: var(--accent);
-            background: rgba(139, 92, 246, 0.05);
-        }
-        .file-upload-box input[type="file"] {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .file-upload-text {
-            font-size: 12px;
-            color: var(--text-muted);
-            pointer-events: none;
-        }
-        .file-name-display {
-            font-size: 11px;
-            color: var(--accent);
-            margin-top: 6px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .remove-file-btn {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 8px;
-            display: inline-block;
-            font-weight: 600;
-            transition: 0.2s;
-        }
-        .remove-file-btn:hover {
-            background: var(--danger);
-            color: white;
-        }
+        .upload-card-box:hover { border-color: rgba(255,255,255,0.25); transform: translateY(-2px); }
+        .upload-card-box input[type="file"] { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .upload-card-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+        .upload-card-val { font-size: 11px; color: #ffffff; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
 
-        .link-item-row {
+        .settings-card {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        .settings-card label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+        .color-row-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+        .color-input-wrapper {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px;
+            display: flex; align-items: center; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text-muted);
+        }
+        .color-input-wrapper input[type="color"] { width: 32px; height: 32px; border: none; background: none; cursor: pointer; border-radius: 6px; }
+
+        .social-picker-box {
             background: var(--card-bg); border: 1px solid var(--border-color);
-            padding: 12px 16px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+            border-radius: 16px; padding: 22px; margin-bottom: 25px;
         }
+        .social-icons-grid {
+            display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;
+        }
+        .social-icon-btn {
+            width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s;
+        }
+        .social-icon-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255,255,255,0.3); transform: translateY(-3px); }
+        .social-icon-btn img { width: 22px; height: 22px; object-fit: contain; }
 
-        /* PUBLIC PROFILE VIEW */
+        .link-item-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 14px; padding: 14px 18px; margin-bottom: 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: 0.2s;
+        }
+        .link-item-card:hover { border-color: rgba(255,255,255,0.15); }
+        .link-card-left { display: flex; align-items: center; gap: 14px; flex-grow: 1; }
+        .link-card-actions { display: flex; align-items: center; gap: 8px; }
+        .link-action-icon-btn {
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border-color);
+            color: var(--text-muted); width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; transition: 0.2s;
+        }
+        .link-action-icon-btn:hover { background: rgba(255, 255, 255, 0.1); color: white; border-color: rgba(255,255,255,0.3); }
+        .link-action-icon-btn.danger:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); border-color: var(--danger); }
+
         .profile-view-container {
             display: none; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 100; align-items: center; justify-content: center; flex-direction: column; text-align: center; overflow-y: auto;
-            padding: 20px; box-sizing: border-box;
-        }
-        .profile-card-center {
-            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 20px;
-            width: 100%; max-width: 420px; box-shadow: 0 30px 60px rgba(0,0,0,0.7); z-index: 50; text-align: left;
-            overflow: visible; margin-top: 30px;
+            z-index: 100; align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box;
         }
         
+        .profile-card-center {
+            border: 1px solid transparent; border-radius: 20px;
+            width: 100%; max-width: 420px; box-shadow: none; z-index: 50; text-align: left;
+            overflow: visible; position: relative;
+            transition: border-color 0.3s ease;
+        }
+
         .profile-banner-container {
-            width: 100%; height: 130px; background: linear-gradient(135deg, #2a2a3c, #1a1a24);
-            border-top-left-radius: 20px; border-top-right-radius: 20px; position: relative; overflow: hidden;
+            width: 100%; height: 130px; background: transparent;
+            border-top-left-radius: inherit; border-top-right-radius: inherit; position: relative; overflow: hidden;
         }
         .profile-banner { width: 100%; height: 100%; object-fit: cover; }
-
         .profile-content-area { padding: 0 24px 24px 24px; position: relative; }
         
         .profile-avatar-wrapper {
             margin-top: -42px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;
         }
+        
         .profile-avatar-large {
             width: 84px; height: 84px; border-radius: 50%; object-fit: cover;
-            border: 4px solid #16161d; background: #111;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+            border: none; background: transparent; box-shadow: 0 8px 20px rgba(0,0,0,0.6); position: relative;
         }
-        
-        .public-link-btn {
-            display: block; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-            color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600;
-            margin-top: 12px; transition: 0.2s; text-align: center; font-size: 14px;
-        }
-        .public-link-btn:hover { background: var(--dynamic-accent, var(--accent)); border-color: var(--dynamic-accent, var(--accent)); transform: translateY(-1px); }
 
-        .badges-container { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-        .badge { font-size: 11px; padding: 4px 10px; border-radius: 6px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; }
-        .badge-beta { background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; color: #60a5fa; }
-        .badge-sub { background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; color: #fbbf24; }
+        .avatar-decoration-ring {
+            position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
+            border: 2px dashed rgba(255,255,255,0.4); border-radius: 50%; animation: spinDeco 10s linear infinite; pointer-events: none; display: none;
+        }
+        @keyframes spinDeco { 100% { transform: rotate(360deg); } }
+
+        #publicLinksList {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 18px;
+            align-items: center;
+        }
+        .public-logo-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(18, 18, 23, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .public-logo-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-3px) scale(1.1);
+        }
+        .public-logo-img {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+        }
+
+        .badges-container { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+        .badge { font-size: 11px; padding: 5px 12px; border-radius: 8px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; }
+        .badge-beta { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.2); color: #ffffff; }
+        .badge-sub { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255,255,255,0.25); color: #ffffff; }
         .badge-admin { background: rgba(239, 68, 68, 0.2); border: 1px solid var(--danger); color: #f87171; }
 
-        /* ADMIN PANEL TABLE & STYLES */
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
+        .uid-badge-fancy {
+            font-size: 11px; font-weight: 700; letter-spacing: 0.5px; padding: 4px 10px; border-radius: 8px;
+            display: inline-flex; align-items: center; gap: 5px; text-transform: uppercase;
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: default;
         }
-        .admin-table th, .admin-table td {
-            padding: 12px 15px;
-            text-align: left;
-            font-size: 13px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .admin-table th {
-            background: rgba(0,0,0,0.3);
-            color: var(--text-muted);
-            font-weight: 600;
-        }
-        .admin-table tr:last-child td { border-bottom: none; }
-        .admin-action-btn {
-            padding: 6px 12px;
-            font-size: 11px;
-            border-radius: 6px;
-            cursor: pointer;
-            border: none;
-            font-weight: bold;
-            margin-right: 5px;
-        }
+        .uid-badge-fancy:hover { transform: translateY(-2px) scale(1.06); filter: brightness(1.2); }
+
+        .uid-tier-red { background: rgba(239, 68, 68, 0.25); border: 1px solid rgba(239, 68, 68, 0.5); color: #ff6b6b; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25); }
+        .uid-tier-gold { background: rgba(245, 158, 11, 0.25); border: 1px solid rgba(245, 158, 11, 0.5); color: #fcd34d; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); }
+        .uid-tier-black { background: rgba(30, 30, 40, 0.7); border: 1px solid rgba(255, 255, 255, 0.12); color: #d1d5db; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); }
+
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); }
+        .admin-table th, .admin-table td { padding: 12px 15px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); }
+        .admin-table th { background: rgba(0,0,0,0.4); color: var(--text-muted); font-weight: 600; }
+        .admin-action-btn { padding: 6px 12px; font-size: 11px; border-radius: 6px; cursor: pointer; border: none; font-weight: bold; margin-right: 5px; }
         .btn-ban { background: var(--danger); color: white; }
-        .btn-role { background: var(--accent); color: white; }
-        .btn-copy { background: rgba(255,255,255,0.1); color: white; border: 1px solid var(--border-color); }
-        .btn-copy:hover { background: rgba(255,255,255,0.2); }
+        .btn-copy { background: rgba(255,255,255,0.08); color: white; border: 1px solid var(--border-color); }
     </style>
 </head>
 <body>
 
-    <!-- SOL ALT KÖŞE DİL SEÇİCİ WIDGET (Sadece Giriş/Kayıt Ekranında Görünür) -->
     <div class="language-selector-container" id="languageSelectorContainer">
         <div class="lang-dropdown-btn" onclick="toggleLangMenu(event)">
-            <span id="currentLangText" data-i18n="language_label">Language</span>
+            <span id="currentLangText">Language</span>
             <span style="font-size: 10px; margin-left: auto;">▼</span>
         </div>
         <div class="lang-menu" id="langMenu">
             <div class="lang-option" onclick="changeLanguage('tr', 'Türkçe', 'tr')"><img src="https://flagcdn.com/w40/tr.png" class="flag-circle-img" alt="TR"> Türkçe</div>
             <div class="lang-option" onclick="changeLanguage('en', 'English', 'gb')"><img src="https://flagcdn.com/w40/gb.png" class="flag-circle-img" alt="GB"> English</div>
-            <div class="lang-option" onclick="changeLanguage('de', 'Deutsch', 'de')"><img src="https://flagcdn.com/w40/de.png" class="flag-circle-img" alt="DE"> Deutsch</div>
-            <div class="lang-option" onclick="changeLanguage('fr', 'Français', 'fr')"><img src="https://flagcdn.com/w40/fr.png" class="flag-circle-img" alt="FR"> Français</div>
-            <div class="lang-option" onclick="changeLanguage('es', 'Español', 'es')"><img src="https://flagcdn.com/w40/es.png" class="flag-circle-img" alt="ES"> Español</div>
-            <div class="lang-option" onclick="changeLanguage('ru', 'Русский', 'ru')"><img src="https://flagcdn.com/w40/ru.png" class="flag-circle-img" alt="RU"> Русский</div>
-            <div class="lang-option" onclick="changeLanguage('az', 'Azərbaycan', 'az')"><img src="https://flagcdn.com/w40/az.png" class="flag-circle-img" alt="AZ"> Azərbaycan</div>
-            <div class="lang-option" onclick="changeLanguage('ar', 'العربية', 'sa')"><img src="https://flagcdn.com/w40/sa.png" class="flag-circle-img" alt="SA"> العربية</div>
-            <div class="lang-option" onclick="changeLanguage('ja', '日本語', 'jp')"><img src="https://flagcdn.com/w40/jp.png" class="flag-circle-img" alt="JP"> 日本語</div>
-            <div class="lang-option" onclick="changeLanguage('zh', '中文', 'cn')"><img src="https://flagcdn.com/w40/cn.png" class="flag-circle-img" alt="CN"> 中文</div>
         </div>
     </div>
 
-    <!-- SAĞ ÜST SES KONTROL WIDGET -->
     <div class="audio-control-widget" id="audioControlWidget">
         <span id="audioIcon">🔊</span>
         <input type="range" id="bgAudioSlider" min="0" max="100" value="50">
     </div>
 
-    <!-- MODERN ANİMASYONLU TOAST BİLDİRİM ELEMENTİ -->
     <div id="toastNotification">
         <div class="toast-icon-wrapper" id="toastIcon">⚡</div>
         <div>
@@ -514,18 +397,13 @@
         </div>
     </div>
 
-    <!-- GİRİŞ/KAYIT İÇİN ANİMASYONLU KANVAS ARKA PLAN -->
     <canvas id="authCanvasBackground"></canvas>
 
-    <!-- PROFİLLER İÇİN ARKA PLAN VİDEO/GÖRSEL CONTAINER -->
     <div id="backgroundContainer" style="display:none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;">
-        <video autoplay loop muted playsinline id="bg-video" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); display: none;">
-            <source src="arkaplan.mp4" type="video/mp4">
-        </video>
+        <video autoplay loop playsinline id="bg-video" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); display: none;"></video>
         <img id="bg-image" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); display: none;" alt="Background">
     </div>
 
-    <!-- LOGIN / REGISTER CONTAINER -->
     <div class="auth-container" id="loginSection">
         <div class="auth-box">
             <h2 id="authHeading">Sign In</h2>
@@ -550,191 +428,225 @@
         </div>
     </div>
 
-    <!-- DASHBOARD PANEL -->
     <div class="dashboard-container" id="dashboardSection">
         <div class="layout-grid">
             
-            <!-- SIDEBAR -->
             <div class="sidebar">
                 <div>
                     <div class="sidebar-logo"><span>⚡</span> muyabe</div>
-                    
-                    <!-- SOL TARAFTA PROFİL ARATMA ALANI -->
                     <div style="margin-bottom: 15px;">
-                        <input type="text" id="sidebarSearchInput" placeholder="🔍 Profil aratma..." onkeypress="handleSearchKey(event)" style="font-size: 12px; padding: 8px 10px; margin: 0; background: rgba(0,0,0,0.3);">
+                        <input type="text" id="sidebarSearchInput" placeholder="🔍 Profil aratma..." onkeypress="handleSearchKey(event)" style="font-size: 12px; padding: 8px 10px; margin: 0; background: rgba(0,0,0,0.4);">
                     </div>
 
                     <ul class="menu-list">
-                        <li class="menu-item active" onclick="switchTab('homeTab', this)"><span data-i18n="menu_overview">📊 Overview</span></li>
-                        <li class="menu-item" onclick="switchTab('customizeTab', this)"><span data-i18n="menu_customize">⚙️ Customize & Theme</span></li>
-                        <li class="menu-item" onclick="switchTab('linksTab', this)"><span data-i18n="menu_links">🔗 Link Management</span></li>
-                        <li class="menu-item" onclick="switchTab('analyticsTab', this)"><span data-i18n="menu_analytics">📈 Analytics & Views</span></li>
-                        <li class="menu-item" onclick="switchTab('badgesTab', this)"><span data-i18n="menu_badges">🛡️ Badges</span></li>
-                        <li class="menu-item" id="adminMenuLink" style="display: none; color: #f87171;" onclick="switchTab('adminTab', this)"><span data-i18n="menu_admin">👑 Admin Panel</span></li>
+                        <li class="menu-item active" onclick="switchTab('homeTab', this)"><span style="font-size:14px;">📊</span> Overview</li>
+                        <li class="menu-item" onclick="switchTab('customizeTab', this)"><span style="font-size:14px;">⚙️</span> Customize & Theme</li>
+                        <li class="menu-item" onclick="switchTab('linksTab', this)"><span style="font-size:14px;">🔗</span> Link Management</li>
+                        <li class="menu-item" onclick="switchTab('badgesTab', this)"><span style="font-size:14px;">🛡️</span> Badges</li>
+                        <li class="menu-item" id="adminMenuLink" style="display: none; color: #f87171;" onclick="switchTab('adminTab', this)"><span style="font-size:14px;">👑</span> Admin Panel</li>
                     </ul>
                 </div>
 
                 <div>
-                    <button id="viewMyPageBtn" style="margin: 0 0 15px 0; padding: 10px; font-size: 13px; background: rgba(139,92,246,0.2); border: 1px solid var(--accent); color: white;" data-i18n="btn_view_page">🌐 View My Page</button>
+                    <button id="viewMyPageBtn" style="margin: 0 0 15px 0; padding: 10px; font-size: 13px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: white;">🌐 View My Page</button>
                     <div class="sidebar-user-profile">
-                        <img id="sidebarAvatarImg" src="https://via.placeholder.com/40" alt="Avatar">
+                        <img id="sidebarAvatarImg" src="" alt="Avatar" style="display:none;" onerror="this.style.display='none'">
                         <div style="text-align: left; overflow: hidden; flex-grow: 1;">
                             <div id="sidebarUsernameText" style="font-size: 13px; font-weight: bold;">User</div>
-                            <div style="font-size: 11px; color: var(--danger); cursor: pointer;" onclick="logoutUser()" data-i18n="btn_signout">Sign Out</div>
+                            <div style="font-size: 11px; color: var(--danger); cursor: pointer;" onclick="logoutUser()">Sign Out</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- MAIN CONTENT -->
             <div class="main-content">
                 
-                <!-- TAB 1: OVERVIEW -->
                 <div id="homeTab" class="panel-section active">
-                    <div class="section-title" data-i18n="overview_title">Account Overview</div>
-                    <div class="cards-grid">
-                        <div class="summary-card">
-                            <div class="card-top"><span data-i18n="card_username">Username</span></div>
-                            <div class="card-body" id="sumUsername">affedemem</div>
+                    <div class="section-title">Account Overview</div>
+                    <div class="cards-grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; margin-bottom:25px;">
+                        <div class="settings-card">
+                            <div style="color:var(--text-muted); font-size:12px;">Username</div>
+                            <div style="font-size:18px; font-weight:bold;" id="sumUsername">user</div>
                         </div>
-                        <div class="summary-card">
-                            <div class="card-top"><span data-i18n="card_uid">UID</span></div>
-                            <div class="card-body" id="sumUid">#1</div>
+                        <div class="settings-card">
+                            <div style="color:var(--text-muted); font-size:12px;">UID</div>
+                            <div style="font-size:18px; font-weight:bold;" id="sumUid">#1</div>
                         </div>
-                        <div class="summary-card">
-                            <div class="card-top"><span data-i18n="card_views">Profile Views</span></div>
-                            <div class="card-body" id="sumViews">33</div>
+                        <div class="settings-card">
+                            <div style="color:var(--text-muted); font-size:12px;">Profile Views</div>
+                            <div style="font-size:18px; font-weight:bold;" id="sumViews">0</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB 2: CUSTOMIZE & THEME -->
                 <div id="customizeTab" class="panel-section">
-                    <div class="section-title" data-i18n="customize_title">Theme & Customization Engine</div>
-                    <div class="cards-grid">
-                        <div class="summary-card">
-                            <label style="font-size:12px; color:var(--text-muted)" data-i18n="label_bio">Biography</label>
-                            <textarea id="inputBio" placeholder="Make a Fortune..." style="height:60px;"></textarea>
+                    <div class="section-title">Dosya Yükleyicileri</div>
+                    <div class="customizer-grid-4">
+                        <div class="upload-card-box">
+                            <input type="file" id="inputBgFile" accept="video/mp4,image/gif,image/*">
+                            <div class="upload-card-label">Arka Plan</div>
+                            <div class="upload-card-val" id="bgFileName">Dosya yükle</div>
                         </div>
-                        <div class="summary-card">
-                            <label style="font-size:12px; color:var(--text-muted)" data-i18n="label_opacity">Profile Opacity (%)</label>
-                            <input type="range" id="inputOpacity" min="20" max="100" value="85" style="margin-top:15px;">
+                        <div class="upload-card-box">
+                            <input type="file" id="inputAvatarFile" accept="image/*">
+                            <div class="upload-card-label">Profil Avatarı</div>
+                            <div class="upload-card-val" id="avatarFileName">Dosya yükle</div>
                         </div>
-                        <div class="summary-card">
-                            <label style="font-size:12px; color:var(--text-muted)" data-i18n="label_accent">Accent Color</label>
-                            <input type="color" id="inputAccentColor" value="#8b5cf6" style="width:100%; height:35px; border:none; background:none; cursor:pointer;">
+                        <div class="upload-card-box">
+                            <input type="file" id="inputBannerFile" accept="image/gif,image/*">
+                            <div class="upload-card-label">Banner (Kapak)</div>
+                            <div class="upload-card-val" id="bannerFileName">Dosya yükle</div>
                         </div>
-                    </div>
-
-                    <!-- DOSYA SEÇME ALANLARI -->
-                    <div class="cards-grid" style="margin-top: 15px;">
-                        <div class="summary-card">
-                            <label style="font-size:12px; color:var(--text-muted)" data-i18n="label_bg">Background Video/GIF</label>
-                            <div class="file-upload-box">
-                                <input type="file" id="inputBgFile" accept="video/mp4,image/gif,image/*">
-                                <div class="file-upload-text" data-i18n="file_click">📁 Click or drop file here</div>
-                                <div class="file-name-display" id="bgFileName" data-i18n="file_none">No file selected</div>
-                            </div>
-                            <button type="button" class="remove-file-btn" onclick="removeFile('bg')">🗑️ Kaldır</button>
-                        </div>
-                        <div class="summary-card">
-                            <label style="font-size:12px; color:var(--text-muted)" data-i18n="label_avatar">Avatar (PP)</label>
-                            <div class="file-upload-box">
-                                <input type="file" id="inputAvatarFile" accept="image/*">
-                                <div class="file-upload-text" data-i18n="file_click">📁 Click or drop file here</div>
-                                <div class="file-name-display" id="avatarFileName" data-i18n="file_none">No file selected</div>
-                            </div>
-                            <button type="button" class="remove-file-btn" onclick="removeFile('avatar')">🗑️ Kaldır</button>
-                        </div>
-                        <div class="summary-card">
-                            <label style="font-size:12px; color:var(--text-muted)" data-i18n="label_banner">Banner Image / GIF</label>
-                            <div class="file-upload-box">
-                                <input type="file" id="inputBannerFile" accept="image/gif,image/*">
-                                <div class="file-upload-text" data-i18n="file_click">📁 Click or drop file here</div>
-                                <div class="file-name-display" id="bannerFileName" data-i18n="file_none">No file selected</div>
-                            </div>
-                            <button type="button" class="remove-file-btn" onclick="removeFile('banner')">🗑️ Kaldır</button>
+                        <div class="upload-card-box">
+                            <input type="file" id="inputAudioFile" accept="audio/*">
+                            <div class="upload-card-label">Profil Müzik/Ses</div>
+                            <div class="upload-card-val" id="audioFileName">Ses dosyası seç</div>
                         </div>
                     </div>
 
-                    <button onclick="saveCustomizations()" style="width:auto; padding: 12px 30px; margin-top: 15px;" data-i18n="btn_save">Save Changes</button>
+                    <div class="section-title">Genel Özelleştirme</div>
+                    <div class="customizer-grid-2">
+                        <div class="settings-card">
+                            <label>Açıklama (Bio)</label>
+                            <textarea id="inputBio" placeholder="A bu benim açıklamam..." style="height:40px; margin:0; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); color:white; padding:8px; border-radius:8px;"></textarea>
+                        </div>
+                        <div class="settings-card">
+                            <label>Konum</label>
+                            <input type="text" id="inputLocation" placeholder="Konum (Örn: Istanbul, TR)" style="margin:0; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); color:white; padding:8px; border-radius:8px;">
+                        </div>
+                    </div>
+
+                    <div class="customizer-grid-2" style="margin-bottom: 20px;">
+                        <div class="settings-card">
+                            <label>Profil Opaklığı (<span id="valOpacity">85</span>%)</label>
+                            <input type="range" id="inputOpacity" min="0" max="100" value="85" style="accent-color: #ffffff; cursor:pointer;" oninput="document.getElementById('valOpacity').innerText=this.value">
+                        </div>
+                        <div class="settings-card">
+                            <label>Profil Bulanıklığı (<span id="valBlur">0</span>px)</label>
+                            <input type="range" id="inputBlur" min="0" max="40" value="0" style="accent-color: #ffffff; cursor:pointer;" oninput="document.getElementById('valBlur').innerText=this.value">
+                        </div>
+                    </div>
+
+                    <div class="customizer-grid-2" style="margin-bottom: 20px;">
+                        <div class="settings-card">
+                            <label>Arka Plan Efektleri</label>
+                            <select id="selectBgEffect" style="margin:0; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); color:white; padding:8px; border-radius:8px;">
+                                <option value="blur">Bulanık Arka Plan</option>
+                                <option value="particles">Parçacık Efekti</option>
+                                <option value="none">Efekt Yok</option>
+                            </select>
+                        </div>
+                        <div class="settings-card">
+                            <label>Kullanıcı Adı Efektleri</label>
+                            <select id="selectNameEffect" style="margin:0; background:rgba(0,0,0,0.4); border:1px solid var(--border-color); color:white; padding:8px; border-radius:8px;">
+                                <option value="glow">Işıltılı Parlama</option>
+                                <option value="rainbow">RGB Gökkuşağı</option>
+                                <option value="none">Yok</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Renk Özelleştirme</div>
+                    <div class="color-row-grid">
+                        <div class="color-input-wrapper">
+                            <span>Vurgu Rengi (Accent)</span>
+                            <input type="color" id="colorAccent" value="#ffffff">
+                        </div>
+                        <div class="color-input-wrapper">
+                            <span>Metin Rengi</span>
+                            <input type="color" id="colorText" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="color-row-grid">
+                        <div class="color-input-wrapper">
+                            <span>Arka Plan Kart Rengi</span>
+                            <input type="color" id="colorCardBg" value="#121217">
+                        </div>
+                        <div class="color-input-wrapper">
+                            <span>İkon Rengi</span>
+                            <input type="color" id="colorIcon" value="#ffffff">
+                        </div>
+                    </div>
+
+                    <button onclick="saveCustomizations()" style="width:auto; padding: 12px 30px; font-weight: bold;">Save Changes</button>
                 </div>
 
-                <!-- TAB 3: LINK MANAGEMENT -->
                 <div id="linksTab" class="panel-section">
-                    <div class="section-title" data-i18n="links_title">Link Management</div>
-                    <div style="background:var(--card-bg); padding:15px; border-radius:12px; border:1px solid var(--border-color); margin-bottom:20px;">
-                        <input type="text" id="newLinkTitle" placeholder="Link Title (e.g. Discord Server)">
-                        <input type="url" id="newLinkUrl" placeholder="URL (e.g. https://discord.gg/...)">
-                        <button onclick="addNewLink()" style="width:auto; padding:10px 20px;" data-i18n="btn_add_link">+ Add New Link</button>
+                    <div class="social-picker-box">
+                        <div style="font-weight: bold; font-size: 15px; display: flex; align-items: center; gap: 8px;">
+                            <span>🔗</span> Sosyal medya profillerini bağla.
+                        </div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Profiline eklemek için bir sosyal medya seç.</div>
+                        
+                        <div class="social-icons-grid">
+                            <div class="social-icon-btn" onclick="quickAddLink('Snapchat', 'https://snapchat.com/add/')"><img src="https://api.iconify.design/simple-icons:snapchat.svg?color=%23FFFC00" alt="Snapchat"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('YouTube', 'https://youtube.com/@')"><img src="https://api.iconify.design/simple-icons:youtube.svg?color=%23FF0000" alt="YouTube"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Discord', 'https://discord.gg/')"><img src="https://api.iconify.design/simple-icons:discord.svg?color=%235865F2" alt="Discord"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Spotify', 'https://spotify.com')"><img src="https://api.iconify.design/simple-icons:spotify.svg?color=%231DB954" alt="Spotify"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Instagram', 'https://instagram.com/')"><img src="https://api.iconify.design/simple-icons:instagram.svg?color=%23E4405F" alt="Instagram"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('X (Twitter)', 'https://x.com/')"><img src="https://api.iconify.design/simple-icons:x.svg?color=%23ffffff" alt="X"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('TikTok', 'https://tiktok.com/@')"><img src="https://api.iconify.design/simple-icons:tiktok.svg?color=%2300f2fe" alt="TikTok"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Telegram', 'https://t.me/')"><img src="https://api.iconify.design/simple-icons:telegram.svg?color=%23229ED9" alt="Telegram"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('SoundCloud', 'https://soundcloud.com/')"><img src="https://api.iconify.design/simple-icons:soundcloud.svg?color=%23FF3300" alt="SoundCloud"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('PayPal', 'https://paypal.me/')"><img src="https://api.iconify.design/simple-icons:paypal.svg?color=%2300457C" alt="PayPal"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('GitHub', 'https://github.com/')"><img src="https://api.iconify.design/simple-icons:github.svg?color=%23ffffff" alt="GitHub"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Roblox', 'https://roblox.com/')"><img src="https://api.iconify.design/simple-icons:roblox.svg?color=%23ffffff" alt="Roblox"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('CashApp', 'https://cash.app/')"><img src="https://api.iconify.design/simple-icons:cashapp.svg?color=%2300D632" alt="CashApp"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('VK', 'https://vk.com/')"><img src="https://api.iconify.design/simple-icons:vk.svg?color=%230077FF" alt="VK"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Steam', 'https://steamcommunity.com/id/')"><img src="https://api.iconify.design/simple-icons:steam.svg?color=%23ffffff" alt="Steam"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Kick', 'https://kick.com/')"><img src="https://api.iconify.design/simple-icons:kick.svg?color=%2353FC18" alt="Kick"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Pinterest', 'https://pinterest.com/')"><img src="https://api.iconify.design/simple-icons:pinterest.svg?color=%23E60023" alt="Pinterest"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Twitch', 'https://twitch.tv/')"><img src="https://api.iconify.design/simple-icons:twitch.svg?color=%239146FF" alt="Twitch"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Reddit', 'https://reddit.com/')"><img src="https://api.iconify.design/simple-icons:reddit.svg?color=%23FF4500" alt="Reddit"></div>
+                            <div class="social-icon-btn" onclick="quickAddLink('Özel Bağlantı', 'https://')"><img src="https://api.iconify.design/lucide:globe.svg?color=%23ffffff" alt="Web"></div>
+                        </div>
                     </div>
+
                     <div id="linksContainer"></div>
                 </div>
 
-                <!-- TAB 4: ANALYTICS -->
-                <div id="analyticsTab" class="panel-section">
-                    <div class="section-title" data-i18n="analytics_title">Profile Analytics & Traffic</div>
-                    <div class="summary-card" style="max-width: 400px;">
-                        <div class="card-top"><span data-i18n="analytics_visits">Total Profile Visits</span></div>
-                        <div class="card-body" id="analyticsTotalViews" style="font-size: 28px; color: var(--accent);">33</div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-top: 5px;" data-i18n="analytics_desc">Active traffic tracked over the last 7 days.</div>
-                    </div>
-                </div>
-
-                <!-- TAB 5: BADGES -->
                 <div id="badgesTab" class="panel-section">
-                    <div class="section-title" data-i18n="badges_title">Your Active Badges</div>
+                    <div class="section-title">Your Active Badges</div>
                     <div id="userBadgesList" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
                 </div>
 
-                <!-- TAB 6: ADMIN PANEL -->
                 <div id="adminTab" class="panel-section">
                     <div class="section-title" style="display: flex; align-items: center; gap: 8px;">
-                        <span>👑</span> <span data-i18n="admin_title">System Administration</span>
+                        <span>👑</span> System Administration
                     </div>
-                    <div class="cards-grid">
-                        <div class="summary-card">
-                            <div class="card-top"><span data-i18n="admin_users">Total Users Registered</span></div>
-                            <div class="card-body" id="adminTotalUsersCount">0</div>
+                    <div class="cards-grid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px;">
+                        <div class="settings-card">
+                            <div style="color:var(--text-muted); font-size:12px;">Total Users Registered</div>
+                            <div style="font-size:18px; font-weight:bold;" id="adminTotalUsersCount">0</div>
                         </div>
-                        <div class="summary-card">
-                            <div class="card-top"><span data-i18n="admin_invites">Active Invite Keys</span></div>
-                            <div class="card-body" id="adminInviteCount">0 Active</div>
+                        <div class="settings-card">
+                            <div style="color:var(--text-muted); font-size:12px;">Active Invite Keys</div>
+                            <div style="font-size:18px; font-weight:bold;" id="adminInviteCount">0 Active</div>
                         </div>
-                        <div class="summary-card" style="justify-content: space-between;">
-                            <div class="card-top"><span data-i18n="admin_gen_invite">Generate Custom Invite</span></div>
+                        <div class="settings-card" style="justify-content: space-between;">
+                            <div style="color:var(--text-muted); font-size:12px;">Generate Custom Invite</div>
                             <div style="display: flex; gap: 6px; margin-top: 5px;">
-                                <input type="number" id="inviteQuantityInput" min="1" max="50" value="1" style="margin:0; width:65px; padding:8px; text-align:center;" title="Adet">
-                                <button onclick="generateCustomInvites()" style="margin:0; padding:8px 12px; font-size: 12px;" data-i18n="btn_generate">🎲 Generate</button>
+                                <input type="number" id="inviteQuantityInput" min="1" max="50" value="1" style="margin:0; width:65px; padding:8px; text-align:center;">
+                                <button onclick="generateCustomInvites()" style="margin:0; padding:8px 12px; font-size: 12px;">🎲 Generate</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- INVITE KEYS MANAGEMENT SECTION -->
                     <div style="margin-top: 25px;">
-                        <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;" data-i18n="admin_table_invites">Generated Invite Keys</div>
+                        <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Generated Invite Keys</div>
                         <table class="admin-table">
                             <thead>
-                                <tr>
-                                    <th data-i18n="th_key">Invite Key</th>
-                                    <th data-i18n="th_status">Status</th>
-                                    <th data-i18n="th_actions">Actions</th>
-                                </tr>
+                                <tr><th>Invite Key</th><th>Status</th><th>Actions</th></tr>
                             </thead>
                             <tbody id="adminInvitesTableBody"></tbody>
                         </table>
                     </div>
 
                     <div style="margin-top: 35px;">
-                        <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;" data-i18n="admin_table_users">User Management List</div>
+                        <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">User Management List</div>
                         <table class="admin-table">
                             <thead>
-                                <tr>
-                                    <th>UID</th>
-                                    <th data-i18n="th_username">Username</th>
-                                    <th data-i18n="th_role">Role / Status</th>
-                                    <th data-i18n="th_actions">Actions</th>
-                                </tr>
+                                <tr><th>UID</th><th>Username</th><th>Role / Status</th><th>Actions</th></tr>
                             </thead>
                             <tbody id="adminUsersTableBody"></tbody>
                         </table>
@@ -745,22 +657,24 @@
         </div>
     </div>
 
-    <!-- PUBLIC PROFILE VIEW -->
     <div class="profile-view-container" id="profileViewSection">
         <div class="top-left-controls">
             <div class="close-profile-btn" onclick="closeMyPage()">
-                <span>←</span> <span data-i18n="btn_back">Back</span>
+                <span>←</span> Back
             </div>
         </div>
         
         <div class="profile-card-center" id="viewProfileCard">
-            <div class="profile-banner-container">
+            <div class="profile-banner-container" id="viewBannerContainer">
                 <img id="viewBanner" class="profile-banner" src="" alt="Banner" style="display: none;">
             </div>
-            <div class="profile-content-area">
+            <div class="profile-content-area" id="viewContentArea">
                 <div class="profile-avatar-wrapper">
-                    <img id="viewAvatar" class="profile-avatar-large" src="https://via.placeholder.com/84" alt="Avatar">
-                    <span id="viewUidBadge" style="font-size: 11px; background: rgba(139,92,246,0.2); border: 1px solid var(--accent); padding: 4px 10px; border-radius: 6px; font-weight: bold;">UID: #1</span>
+                    <div style="position: relative; display: inline-block;">
+                        <img id="viewAvatar" class="profile-avatar-large" src="" alt="Avatar" style="display: none;" onerror="this.style.display='none'">
+                        <div class="avatar-decoration-ring" id="viewAvatarDecoration"></div>
+                    </div>
+                    <div id="viewUidBadge" class="uid-badge-fancy">UID: #1</div>
                 </div>
 
                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -768,7 +682,10 @@
                 </div>
 
                 <div class="badges-container" id="viewBadgesContainer"></div>
-                <p id="viewBio" style="color: var(--text-muted); font-size: 13px; margin: 12px 0 0 0; line-height: 1.4;"></p>
+                <p id="viewBio" style="font-size: 13px; margin: 12px 0 0 0; line-height: 1.4;"></p>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+                    <div id="viewLocationDisplay" style="font-size: 11px; color: var(--text-muted);">📍 Konum belirtilmemiş</div>
+                </div>
                 
                 <div id="publicLinksList" style="margin-top: 18px;"></div>
             </div>
@@ -776,657 +693,25 @@
     </div>
 
     <script>
-        // ÇOKLU DİL SÖZLÜĞÜ (10 Dil)
-        const translations = {
-            tr: {
-                language_label: "Dil",
-                signin: "Giriş Yap",
-                signup: "Kayıt Ol",
-                signin_sub: "Kullanıcı adınızla hesabınıza erişin",
-                signup_sub: "Yeni bir hesap oluşturun ve aramıza katılın",
-                username_placeholder: "kullanıcı adı",
-                password_placeholder: "şifre",
-                invite_placeholder: "davetiye kodu",
-                remember_me: "Beni Hatırla",
-                no_account: "Hesabın yok mu?",
-                has_account: "Zaten hesabın var mı?",
-                buy_invite: "Davetiye Satın Al",
-                menu_overview: "📊 Genel Bakış",
-                menu_customize: "⚙️ Özelleştirme & Tema",
-                menu_links: "🔗 Bağlantı Yönetimi",
-                menu_analytics: "📈 İstatistikler & Ziyaret",
-                menu_badges: "🛡️ Rozetler",
-                menu_admin: "👑 Yönetici Paneli",
-                btn_view_page: "🌐 Sayfamı Görüntüle",
-                btn_signout: "Çıkış Yap",
-                overview_title: "Hesap Genel Bakışı",
-                card_username: "Kullanıcı Adı",
-                card_uid: "Kullanıcı ID",
-                card_views: "Profil Görüntülenme",
-                customize_title: "Tema ve Özelleştirme Motoru",
-                label_bio: "Biyografi",
-                label_opacity: "Profil Saydamlığı (%)",
-                label_accent: "Vurgu Rengi",
-                label_bg: "Arka Plan Video/GIF",
-                label_avatar: "Profil Fotoğrafı (PP)",
-                label_banner: "Kapak Fotoğrafı / GIF",
-                file_click: "📁 Dosya seçmek için tıklayın",
-                file_none: "Dosya seçilmedi",
-                btn_save: "Değişiklikleri Kaydet",
-                links_title: "Bağlantı Yönetimi",
-                btn_add_link: "+ Yeni Bağlantı Ekle",
-                analytics_title: "Profil İstatistikleri ve Trafik",
-                analytics_visits: "Toplam Profil Ziyareti",
-                analytics_desc: "Son 7 gün içinde takip edilen aktif trafik.",
-                badges_title: "Aktif Rozetleriniz",
-                admin_title: "Sistem Yönetimi",
-                admin_users: "Kayıtlı Toplam Kullanıcı",
-                admin_invites: "Aktif Davetiye Anahtarları",
-                admin_gen_invite: "Özel Davetiye Oluştur",
-                btn_generate: "🎲 Oluştur",
-                admin_table_invites: "Oluşturulmuş Davetiye Anahtarları",
-                admin_table_users: "Kullanıcı Yönetim Listesi",
-                th_key: "Davetiye Kodu",
-                th_status: "Durum",
-                th_actions: "İşlemler",
-                th_username: "Kullanıcı Adı",
-                th_role: "Rol / Durum",
-                btn_back: "Geri",
-                toast_success: "Başarılı",
-                toast_lang_changed: "Dil başarıyla Türkçe olarak değiştirildi.",
-                toast_login_success: "Başarıyla Giriş Yapıldı!",
-                toast_register_success: "Başarıyla Kayıt Olundu!"
-            },
-            en: {
-                language_label: "Language",
-                signin: "Sign In",
-                signup: "Sign Up",
-                signin_sub: "Access your account with your username",
-                signup_sub: "Create a new account and join us",
-                username_placeholder: "username",
-                password_placeholder: "password",
-                invite_placeholder: "invite key",
-                remember_me: "Remember Me",
-                no_account: "Don't have an account?",
-                has_account: "Already have an account?",
-                buy_invite: "Buy Invite",
-                menu_overview: "📊 Overview",
-                menu_customize: "⚙️ Customize & Theme",
-                menu_links: "🔗 Link Management",
-                menu_analytics: "📈 Analytics & Views",
-                menu_badges: "🛡️ Badges",
-                menu_admin: "👑 Admin Panel",
-                btn_view_page: "🌐 View My Page",
-                btn_signout: "Sign Out",
-                overview_title: "Account Overview",
-                card_username: "Username",
-                card_uid: "UID",
-                card_views: "Profile Views",
-                customize_title: "Theme & Customization Engine",
-                label_bio: "Biography",
-                label_opacity: "Profile Opacity (%)",
-                label_accent: "Accent Color",
-                label_bg: "Background Video/GIF",
-                label_avatar: "Avatar (PP)",
-                label_banner: "Banner Image / GIF",
-                file_click: "📁 Click or drop file here",
-                file_none: "No file selected",
-                btn_save: "Save Changes",
-                links_title: "Link Management",
-                btn_add_link: "+ Add New Link",
-                analytics_title: "Profile Analytics & Traffic",
-                analytics_visits: "Total Profile Visits",
-                analytics_desc: "Active traffic tracked over the last 7 days.",
-                badges_title: "Your Active Badges",
-                admin_title: "System Administration",
-                admin_users: "Total Users Registered",
-                admin_invites: "Active Invite Keys",
-                admin_gen_invite: "Generate Custom Invite",
-                btn_generate: "🎲 Generate",
-                admin_table_invites: "Generated Invite Keys",
-                admin_table_users: "User Management List",
-                th_key: "Invite Key",
-                th_status: "Status",
-                th_actions: "Actions",
-                th_username: "Username",
-                th_role: "Role / Status",
-                btn_back: "Back",
-                toast_success: "Success",
-                toast_lang_changed: "Language successfully changed to English.",
-                toast_login_success: "Successfully Signed In!",
-                toast_register_success: "Successfully Registered!"
-            },
-            de: {
-                language_label: "Sprache",
-                signin: "Anmelden",
-                signup: "Registrieren",
-                signin_sub: "Greifen Sie mit Ihrem Benutzernamen auf Ihr Konto zu",
-                signup_sub: "Erstellen Sie ein neues Konto und machen Sie mit",
-                username_placeholder: "benutzername",
-                password_placeholder: "passwort",
-                invite_placeholder: "einladungscode",
-                remember_me: "Erinnere dich an mich",
-                no_account: "Haben Sie kein Konto?",
-                has_account: "Haben Sie bereits ein Konto?",
-                buy_invite: "Einladung kaufen",
-                menu_overview: "📊 Übersicht",
-                menu_customize: "⚙️ Anpassen & Thema",
-                menu_links: "🔗 Link-Verwaltung",
-                menu_analytics: "📈 Analytik & Aufrufe",
-                menu_badges: "🛡️ Abzeichen",
-                menu_admin: "👑 Admin-Panel",
-                btn_view_page: "🌐 Meine Seite anzeigen",
-                btn_signout: "Abmelden",
-                overview_title: "Kontoübersicht",
-                card_username: "Benutzername",
-                card_uid: "UID",
-                card_views: "Profilaufrufe",
-                customize_title: "Themen- und Anpassungsengine",
-                label_bio: "Biografie",
-                label_opacity: "Profil-Deckkraft (%)",
-                label_accent: "Akzentfarbe",
-                label_bg: "Hintergrundvideo/GIF",
-                label_avatar: "Avatar",
-                label_banner: "Bannerbild / GIF",
-                file_click: "📁 Klicken oder Datei hierher ziehen",
-                file_none: "Keine Datei ausgewählt",
-                btn_save: "Änderungen speichern",
-                links_title: "Link-Verwaltung",
-                btn_add_link: "+ Neuen Link hinzufügen",
-                analytics_title: "Profilanalyse und Verkehr",
-                analytics_visits: "Gesamte Profilbesuche",
-                analytics_desc: "Aktiver Verkehr in den letzten 7 Tagen.",
-                badges_title: "Ihre aktiven Abzeichen",
-                admin_title: "Systemverwaltung",
-                admin_users: "Registrierte Benutzer gesamt",
-                admin_invites: "Aktive Einladungsschlüssel",
-                admin_gen_invite: "Benutzerdefinierte Einladung generieren",
-                btn_generate: "🎲 Generieren",
-                admin_table_invites: "Generierte Einladungsschlüssel",
-                admin_table_users: "Benutzerverwaltungsliste",
-                th_key: "Einladungsschlüssel",
-                th_status: "Status",
-                th_actions: "Aktionen",
-                th_username: "Benutzername",
-                th_role: "Rolle / Status",
-                btn_back: "Zurück",
-                toast_success: "Erfolg",
-                toast_lang_changed: "Sprache erfolgreich auf Deutsch geändert.",
-                toast_login_success: "Erfolgreich angemeldet!",
-                toast_register_success: "Erfolgreich registriert!"
-            },
-            fr: {
-                language_label: "Langue",
-                signin: "Se connecter",
-                signup: "S'inscrire",
-                signin_sub: "Accédez à votre compte avec votre nom d'utilisateur",
-                signup_sub: "Créez un nouveau compte et rejoignez-nous",
-                username_placeholder: "nom d'utilisateur",
-                password_placeholder: "mot de passe",
-                invite_placeholder: "clé d'invitation",
-                remember_me: "Se souvenir de moi",
-                no_account: "Vous n'avez pas de compte ?",
-                has_account: "Vous avez déjà un compte ?",
-                buy_invite: "Acheter une invitation",
-                menu_overview: "📊 Aperçu",
-                menu_customize: "⚙️ Personnaliser & Thème",
-                menu_links: "🔗 Gestion des liens",
-                menu_analytics: "📈 Analyses & Vues",
-                menu_badges: "🛡️ Badges",
-                menu_admin: "👑 Panneau d'administration",
-                btn_view_page: "🌐 Voir ma page",
-                btn_signout: "Se déconnecter",
-                overview_title: "Aperçu du compte",
-                card_username: "Nom d'utilisateur",
-                card_uid: "UID",
-                card_views: "Vues du profil",
-                customize_title: "Moteur de thème et de personnalisation",
-                label_bio: "Biographie",
-                label_opacity: "Opacité du profil (%)",
-                label_accent: "Couleur d'accentuation",
-                label_bg: "Vidéo/GIF d'arrière-plan",
-                label_avatar: "Avatar",
-                label_banner: "Image de bannière / GIF",
-                file_click: "📁 Cliquez ou déposez un fichier",
-                file_none: "Aucun fichier sélectionné",
-                btn_save: "Enregistrer les modifications",
-                links_title: "Gestion des liens",
-                btn_add_link: "+ Ajouter un nouveau lien",
-                analytics_title: "Analyses de profil et trafic",
-                analytics_visits: "Total des visites du profil",
-                analytics_desc: "Trafic actif suivi au cours des 7 derniers jours.",
-                badges_title: "Vos badges actifs",
-                admin_title: "Administration système",
-                admin_users: "Total des utilisateurs enregistrés",
-                admin_invites: "Clés d'invitation actives",
-                admin_gen_invite: "Générer une invitation personnalisée",
-                btn_generate: "🎲 Générer",
-                admin_table_invites: "Clés d'invitation générées",
-                admin_table_users: "Liste de gestion des utilisateurs",
-                th_key: "Clé d'invitation",
-                th_status: "Statut",
-                th_actions: "Actions",
-                th_username: "Nom d'utilisateur",
-                th_role: "Rôle / Statut",
-                btn_back: "Retour",
-                toast_success: "Succès",
-                toast_lang_changed: "Langue changée avec succès en Français.",
-                toast_login_success: "Connexion réussie !",
-                toast_register_success: "Inscription réussie !"
-            },
-            es: {
-                language_label: "Idioma",
-                signin: "Iniciar sesión",
-                signup: "Registrarse",
-                signin_sub: "Accede a tu cuenta con tu nombre de usuario",
-                signup_sub: "Crea una nueva cuenta y únete a nosotros",
-                username_placeholder: "nombre de usuario",
-                password_placeholder: "contraseña",
-                invite_placeholder: "clave de invitación",
-                remember_me: "Recuérdame",
-                no_account: "¿No tienes una cuenta?",
-                has_account: "¿Ya tienes una cuenta?",
-                buy_invite: "Comprar invitación",
-                menu_overview: "📊 Resumen",
-                menu_customize: "⚙️ Personalizar y Tema",
-                menu_links: "🔗 Gestión de enlaces",
-                menu_analytics: "📈 Analítica y Vistas",
-                menu_badges: "🛡️ Insignias",
-                menu_admin: "👑 Panel de Administración",
-                btn_view_page: "🌐 Ver mi página",
-                btn_signout: "Cerrar sesión",
-                overview_title: "Resumen de la cuenta",
-                card_username: "Nombre de usuario",
-                card_uid: "UID",
-                card_views: "Vistas del perfil",
-                customize_title: "Motor de temas y personalización",
-                label_bio: "Biografía",
-                label_opacity: "Opacidad del perfil (%)",
-                label_accent: "Color de acento",
-                label_bg: "Video/GIF de fondo",
-                label_avatar: "Avatar",
-                label_banner: "Imagen de banner / GIF",
-                file_click: "📁 Haz clic o arrastra un archivo",
-                file_none: "Ningún archivo seleccionado",
-                btn_save: "Guardar cambios",
-                links_title: "Gestión de enlaces",
-                btn_add_link: "+ Agregar nuevo enlace",
-                analytics_title: "Analítica de perfil y tráfico",
-                analytics_visits: "Visitas totales al perfil",
-                analytics_desc: "Tráfico activo rastreado en los últimos 7 días.",
-                badges_title: "Tus insignias activas",
-                admin_title: "Administración del sistema",
-                admin_users: "Usuarios totales registrados",
-                admin_invites: "Claves de invitación activas",
-                admin_gen_invite: "Generar invitación personalizada",
-                btn_generate: "🎲 Generar",
-                admin_table_invites: "Claves de invitación generadas",
-                admin_table_users: "Lista de gestión de usuarios",
-                th_key: "Clave de invitación",
-                th_status: "Estado",
-                th_actions: "Acciones",
-                th_username: "Nombre de usuario",
-                th_role: "Rol / Estado",
-                btn_back: "Volver",
-                toast_success: "Éxito",
-                toast_lang_changed: "Idioma cambiado con éxito a Español.",
-                toast_login_success: "¡Inicio de sesión exitoso!",
-                toast_register_success: "¡Registro exitoso!"
-            },
-            ru: {
-                language_label: "Язык",
-                signin: "Войти",
-                signup: "Регистрация",
-                signin_sub: "Войдите в аккаунт, используя имя пользователя",
-                signup_sub: "Создайте новый аккаунт и присоединяйтесь к нам",
-                username_placeholder: "имя пользователя",
-                password_placeholder: "пароль",
-                invite_placeholder: "код приглашения",
-                remember_me: "Запомнить меня",
-                no_account: "Нет аккаунта?",
-                has_account: "Уже есть аккаунт?",
-                buy_invite: "Купить приглашение",
-                menu_overview: "📊 Обзор",
-                menu_customize: "⚙️ Настройка и Тема",
-                menu_links: "🔗 Управление ссылками",
-                menu_analytics: "📈 Аналитика и Просмотры",
-                menu_badges: "🛡️ Значки",
-                menu_admin: "👑 Панель администратора",
-                btn_view_page: "🌐 Просмотреть мою страницу",
-                btn_signout: "Выйти",
-                overview_title: "Обзор аккаунта",
-                card_username: "Имя пользователя",
-                card_uid: "UID",
-                card_views: "Просмотры профиля",
-                customize_title: "Модуль тем и настройки",
-                label_bio: "Биография",
-                label_opacity: "Прозрачность профиля (%)",
-                label_accent: "Акцентный цвет",
-                label_bg: "Фоновое видео/GIF",
-                label_avatar: "Аватар",
-                label_banner: "Баннер / GIF",
-                file_click: "📁 Нажмите или перетащите файл",
-                file_none: "Файл не выбран",
-                btn_save: "Сохранить изменения",
-                links_title: "Управление ссылками",
-                btn_add_link: "+ Добавить ссылку",
-                analytics_title: "Аналитика профиля и трафик",
-                analytics_visits: "Всего посещений профиля",
-                analytics_desc: "Активный трафик за последние 7 дней.",
-                badges_title: "Ваши активные значки",
-                admin_title: "Системное администрирование",
-                admin_users: "Всего зарегистрированных пользователей",
-                admin_invites: "Активные ключи приглашений",
-                admin_gen_invite: "Сгенерировать приглашение",
-                btn_generate: "🎲 Сгенерировать",
-                admin_table_invites: "Сгенерированные ключи",
-                admin_table_users: "Список пользователей",
-                th_key: "Ключ приглашения",
-                th_status: "Статус",
-                th_actions: "Действия",
-                th_username: "Имя пользователя",
-                th_role: "Роль / Статус",
-                btn_back: "Назад",
-                toast_success: "Успех",
-                toast_lang_changed: "Язык успешно изменен на Русский.",
-                toast_login_success: "Успешный вход!",
-                toast_register_success: "Успешная регистрация!"
-            },
-            az: {
-                language_label: "Dil",
-                signin: "Daxil ol",
-                signup: "Qeydiyyatdan keç",
-                signin_sub: "İstifadəçi adınızla hesabınıza daxil olun",
-                signup_sub: "Yeni hesab yaradın və bizə qoşulun",
-                username_placeholder: "istifadəçi adı",
-                password_placeholder: "şifrə",
-                invite_placeholder: "dəvət kodu",
-                remember_me: "Məni xatırla",
-                no_account: "Hesabınız yoxdur?",
-                has_account: "Artıq hesabınız var?",
-                buy_invite: "Dəvət Al",
-                menu_overview: "📊 ümumi baxış",
-                menu_customize: "⚙️ Fərdiləşdirmə və Tema",
-                menu_links: "🔗 Keçid İdarəetməsi",
-                menu_analytics: "📈 Analitika və Baxışlar",
-                menu_badges: "🛡️ Nişanlar",
-                menu_admin: "👑 Admin Paneli",
-                btn_view_page: "🌐 Səhifəmi Göstər",
-                btn_signout: "Çıxış et",
-                overview_title: "Hesab Baxışı",
-                card_username: "İstifadəçi Adı",
-                card_uid: "UID",
-                card_views: "Profil Baxışları",
-                customize_title: "Tema və Fərdiləşdirmə Mühərriki",
-                label_bio: "Bioqrafiya",
-                label_opacity: "Profil Şəffaflığı (%)",
-                label_accent: "Vurğu Rəngi",
-                label_bg: "Arxa Fon Video/GIF",
-                label_avatar: "Avatar",
-                label_banner: "Banner Şəkli / GIF",
-                file_click: "📁 Fayl seçmək üçün klikləyin",
-                file_none: "Fayl seçilməyib",
-                btn_save: "Dəyişiklikləri Yadda Saxla",
-                links_title: "Keçid İdarəetməsi",
-                btn_add_link: "+ Yeni Keçid Əlavə Et",
-                analytics_title: "Profil Analitikası və Trafik",
-                analytics_visits: "Ümumi Profil Ziyarəti",
-                analytics_desc: "Son 7 gündə izlənilən aktiv trafik.",
-                badges_title: "Aktiv Nişanlarınız",
-                admin_title: "Sistem İdarəetməsi",
-                admin_users: "Qeydiyyatdan Keçən İstifadəçilər",
-                admin_invites: "Aktiv Dəvət Kodları",
-                admin_gen_invite: "Xüsusi Dəvət Yarat",
-                btn_generate: "🎲 Yarat",
-                admin_table_invites: "Yaradılmış Dəvət Kodları",
-                admin_table_users: "İstifadəçi İdarəetmə Siyahısı",
-                th_key: "Dəvət Kodu",
-                th_status: "Status",
-                th_actions: "Əməliyyatlar",
-                th_username: "İstifadəçi Adı",
-                th_role: "Rol / Status",
-                btn_back: "Geri",
-                toast_success: "Uğurlu",
-                toast_lang_changed: "Dil uğurla Azərbaycan dilinə dəyişdirildi.",
-                toast_login_success: "Uğurla daxil olundu!",
-                toast_register_success: "Uğurla qeydiyyatdan keçildi!"
-            },
-            ar: {
-                language_label: "اللغة",
-                signin: "تسجيل الدخول",
-                signup: "إنشاء حساب",
-                signin_sub: "الوصول إلى حسابك باستخدام اسم المستخدم",
-                signup_sub: "أنشئ حساباً جديداً وانضم إلينا",
-                username_placeholder: "اسم المستخدم",
-                password_placeholder: "كلمة المرور",
-                invite_placeholder: "رمز الدعوة",
-                remember_me: "تذكرني",
-                no_account: "ليس لديك حساب؟",
-                has_account: "لديك حساب بالفعل؟",
-                buy_invite: "شراء دعوة",
-                menu_overview: "📊 نظرة عامة",
-                menu_customize: "⚙️ التخصيص والمظهر",
-                menu_links: "🔗 إدارة الروابط",
-                menu_analytics: "📈 التحليلات والزيارات",
-                menu_badges: "🛡️ الشارات",
-                menu_admin: "👑 لوحة الإدارة",
-                btn_view_page: "🌐 عرض صفحتي",
-                btn_signout: "تسجيل الخروج",
-                overview_title: "نظرة عامة على الحساب",
-                card_username: "اسم المستخدم",
-                card_uid: "UID",
-                card_views: "مشاهدات الملف الشخصي",
-                customize_title: "محرك المظهر والتخصيص",
-                label_bio: "السيرة الذاتية",
-                label_opacity: "شفافية الملف الشخصي (%)",
-                label_accent: "لون التمييز",
-                label_bg: "فيديو/GIF الخلفية",
-                label_avatar: "الصورة الشخصية",
-                label_banner: "صورة الغلاف / GIF",
-                file_click: "📁 انقر أو اسحب ملفاً هنا",
-                file_none: "لم يتم اختيار ملف",
-                btn_save: "حفظ التغييرات",
-                links_title: "إدارة الروابط",
-                btn_add_link: "+ إضافة رابط جديد",
-                analytics_title: "تحليلات الملف الشخصي والمرور",
-                analytics_visits: "إجمالي زيارات الملف",
-                analytics_desc: "حركة المرور النشطة خلال آخر 7 أيام.",
-                badges_title: "شاراتك النشطة",
-                admin_title: "إدارة النظام",
-                admin_users: "إجمالي المستخدمين المسجلين",
-                admin_invites: "مفاتيح الدعوة النشطة",
-                admin_gen_invite: "إنشاء دعوة مخصصة",
-                btn_generate: "🎲 إنشاء",
-                admin_table_invites: "مفاتيح الدعوة المُنشأة",
-                admin_table_users: "قائمة إدارة المستخدمين",
-                th_key: "مفتاح الدعوة",
-                th_status: "الحالة",
-                th_actions: "الإجراءات",
-                th_username: "اسم المستخدم",
-                th_role: "الدور / الحالة",
-                btn_back: "رجوع",
-                toast_success: "نجاح",
-                toast_lang_changed: "تم تغيير اللغة بنجاح إلى العربية.",
-                toast_login_success: "تم تسجيل الدخول بنجاح!",
-                toast_register_success: "تم التسجيل بنجاح!"
-            },
-            ja: {
-                language_label: "言語",
-                signin: "サインイン",
-                signup: "登録",
-                signin_sub: "ユーザー名でアカウントにアクセス",
-                signup_sub: "新しいアカウントを作成して参加する",
-                username_placeholder: "ユーザー名",
-                password_placeholder: "パスワード",
-                invite_placeholder: "招待キー",
-                remember_me: "ログイン状態を保持する",
-                no_account: "アカウントをお持ちですか？",
-                has_account: "すでにアカウントをお持ちですか？",
-                buy_invite: "招待を購入",
-                menu_overview: "📊 概要",
-                menu_customize: "⚙️ カスタマイズ & テーマ",
-                menu_links: "🔗 リンク管理",
-                menu_analytics: "📈 分析 & 閲覧数",
-                menu_badges: "🛡️ バッジ",
-                menu_admin: "👑 管理パネル",
-                btn_view_page: "🌐 マイページを表示",
-                btn_signout: "サインアウト",
-                overview_title: "アカウント概要",
-                card_username: "ユーザー名",
-                card_uid: "UID",
-                card_views: "プロフィール閲覧数",
-                customize_title: "テーマとカスタマイズエンジン",
-                label_bio: "自己紹介",
-                label_opacity: "プロフィールの不透明度 (%)",
-                label_accent: "アクセントカラー",
-                label_bg: "背景動画/GIF",
-                label_avatar: "アバター",
-                label_banner: "バナー画像 / GIF",
-                file_click: "📁 クリックまたはファイルをドロップ",
-                file_none: "ファイル未選択",
-                btn_save: "変更を保存",
-                links_title: "リンク管理",
-                btn_add_link: "+ 新規リンク追加",
-                analytics_title: "プロフィール分析とトラフィック",
-                analytics_visits: "総プロフィール訪問数",
-                analytics_desc: "過去7日間のアクティブなトラフィック。",
-                badges_title: "有効なバッジ",
-                admin_title: "システム管理",
-                admin_users: "登録ユーザー総数",
-                admin_invites: "有効な招待キー",
-                admin_gen_invite: "カスタム招待を生成",
-                btn_generate: "🎲 生成",
-                admin_table_invites: "生成された招待キー",
-                admin_table_users: "ユーザー管理リスト",
-                th_key: "招待キー",
-                th_status: "ステータス",
-                th_actions: "アクション",
-                th_username: "ユーザー名",
-                th_role: "ロール / ステータス",
-                btn_back: "戻る",
-                toast_success: "成功",
-                toast_lang_changed: "言語が日本語に正常に変更されました。",
-                toast_login_success: "サインインしました！",
-                toast_register_success: "登録しました！"
-            },
-            zh: {
-                language_label: "语言",
-                signin: "登录",
-                signup: "注册",
-                signin_sub: "使用您的用户名访问您的账户",
-                signup_sub: "创建一个新账户并加入我们",
-                username_placeholder: "用户名",
-                password_placeholder: "密码",
-                invite_placeholder: "邀请码",
-                remember_me: "记住我",
-                no_account: "没有账户？",
-                has_account: "已经有账户了？",
-                buy_invite: "购买邀请码",
-                menu_overview: "📊 概览",
-                menu_customize: "⚙️ 自定义与主题",
-                menu_links: "🔗 链接管理",
-                menu_analytics: "📈 分析与访问",
-                menu_badges: "🛡️ 徽章",
-                menu_admin: "👑 管理面板",
-                btn_view_page: "🌐 查看我的主页",
-                btn_signout: "登出",
-                overview_title: "账户概览",
-                card_username: "用户名",
-                card_uid: "UID",
-                card_views: "个人主页访问量",
-                customize_title: "主题与自定义引擎",
-                label_bio: "个人简介",
-                label_opacity: "主页透明度 (%)",
-                label_accent: "强调色",
-                label_bg: "背景视频/GIF",
-                label_avatar: "头像",
-                label_banner: "横幅图片 / GIF",
-                file_click: "📁 点击或拖放文件",
-                file_none: "未选择文件",
-                btn_save: "保存更改",
-                links_title: "链接管理",
-                btn_add_link: "+ 添加新链接",
-                analytics_title: "主页分析与流量",
-                analytics_visits: "总访问量",
-                analytics_desc: "过去 7 天内的活跃流量跟踪。",
-                badges_title: "您的活跃徽章",
-                admin_title: "系统管理",
-                admin_users: "注册用户总数",
-                admin_invites: "活跃邀请码",
-                admin_gen_invite: "生成自定义邀请码",
-                btn_generate: "🎲 生成",
-                admin_table_invites: "已生成的邀请码",
-                admin_table_users: "用户管理列表",
-                th_key: "邀请码",
-                th_status: "状态",
-                th_actions: "操作",
-                th_username: "用户名",
-                th_role: "角色 / 状态",
-                btn_back: "返回",
-                toast_success: "成功",
-                toast_lang_changed: "语言成功切换为中文。",
-                toast_login_success: "登录成功！",
-                toast_register_success: "注册成功！"
-            }
-        };
-
         let currentLang = 'tr';
 
         function changeLanguage(code, name, countryCode) {
             currentLang = code;
             document.querySelectorAll('.lang-option').forEach(opt => opt.classList.remove('active'));
             event.currentTarget.classList.add('active');
-
-            applyTranslations();
-            showToast(translations[code].toast_success, translations[code].toast_lang_changed, "🌐");
+            showToast("Başarılı", "Dil değiştirildi.", "🌐");
         }
 
-        function applyTranslations() {
-            const t = translations[currentLang] || translations['tr'];
-
-            // Auth form elementleri
-            document.getElementById('authHeading').innerText = isRegisterMode ? t.signup : t.signin;
-            document.getElementById('authSubheading').innerText = isRegisterMode ? t.signup_sub : t.signin_sub;
-            document.getElementById('authUsername').placeholder = t.username_placeholder;
-            document.getElementById('authPassword').placeholder = t.password_placeholder;
-            document.getElementById('authInviteKey').placeholder = t.invite_placeholder;
-            document.getElementById('lblRemember').innerText = t.remember_me;
-            document.getElementById('authActionBtn').innerText = isRegisterMode ? t.signup : t.signin;
-            document.getElementById('lblNoAccount').innerText = isRegisterMode ? t.has_account : t.no_account;
-            document.getElementById('authSwitchTrigger').innerText = isRegisterMode ? t.signin : t.signup;
-            document.getElementById('lblBuyInvite').innerText = t.buy_invite;
-
-            // Diğer tüm data-i18n etiketleri
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (t[key]) {
-                    el.innerText = t[key];
-                }
-            });
-        }
-
-        // DİL SEÇİMİ VE AÇILIR MENÜ MANTIĞI
         function toggleLangMenu(e) {
             e.stopPropagation();
             document.getElementById('langMenu').classList.toggle('show');
         }
+        window.addEventListener('click', () => { document.getElementById('langMenu').classList.remove('show'); });
 
-        window.addEventListener('click', () => {
-            const menu = document.getElementById('langMenu');
-            if (menu.classList.contains('show')) {
-                menu.classList.remove('show');
-            }
-        });
-
-        // ŞIK ANİMASYONLU KANVAS ARKA PLAN (PARTİKÜL AĞI)
         const canvas = document.getElementById('authCanvasBackground');
         const ctx = canvas.getContext('2d');
         let particlesArray = [];
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
@@ -1435,54 +720,30 @@
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
                 this.size = Math.random() * 2 + 0.8;
-                this.speedX = (Math.random() - 0.5) * 0.6;
-                this.speedY = (Math.random() - 0.5) * 0.6;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
             }
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x > canvas.width) this.x = 0;
-                else if (this.x < 0) this.x = canvas.width;
-                if (this.y > canvas.height) this.y = 0;
-                else if (this.y < 0) this.y = canvas.height;
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.x > canvas.width) this.x = 0; else if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0; else if (this.y < 0) this.y = canvas.height;
             }
             draw() {
-                ctx.fillStyle = 'rgba(139, 92, 246, 0.6)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-
         function initParticles() {
             particlesArray = [];
-            let numberOfParticles = (canvas.width * canvas.height) / 14000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
+            let n = (canvas.width * canvas.height) / 14000;
+            for (let i = 0; i < n; i++) particlesArray.push(new Particle());
         }
         initParticles();
 
         function animateCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-
-                for (let j = i; j < particlesArray.length; j++) {
-                    let dx = particlesArray[i].x - particlesArray[j].x;
-                    let dy = particlesArray[i].y - particlesArray[j].y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 110) {
-                        ctx.strokeStyle = `rgba(139, 92, 246, ${0.15 * (1 - distance / 110)})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
-                        ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
-                        ctx.stroke();
-                    }
-                }
+                particlesArray[i].update(); particlesArray[i].draw();
             }
             requestAnimationFrame(animateCanvas);
         }
@@ -1497,212 +758,238 @@
         const ADMIN_UID = 1;
 
         if (!localStorage.getItem('custom_invite_keys')) {
-            localStorage.setItem('custom_invite_keys', JSON.stringify(["MUYABE-1337", "ORVIN-2026", "VIP-KEY-999", "TEST-KEY-123"]));
+            localStorage.setItem('custom_invite_keys', JSON.stringify(["MUYABE-1337", "ORVIN-2026", "VIP-KEY-999"]));
         }
 
         const bgVideo = document.getElementById('bg-video');
         const bgImage = document.getElementById('bg-image');
         const bgAudioSlider = document.getElementById('bgAudioSlider');
         const audioIcon = document.getElementById('audioIcon');
+        let profileAudioElement = new Audio();
 
         bgAudioSlider.oninput = (e) => {
-            const val = e.target.value;
-            bgVideo.volume = val / 100;
-            if (val > 0) {
-                bgVideo.muted = false;
-            } else {
-                bgVideo.muted = true;
-            }
-
-            if (val == 0) {
-                audioIcon.innerText = "🔇";
-            } else if (val < 50) {
-                audioIcon.innerText = "🔉";
-            } else {
-                audioIcon.innerText = "🔊";
-            }
+            let val = e.target.value;
+            let vol = val / 100;
+            profileAudioElement.volume = vol;
+            bgVideo.volume = vol;
+            if (val == 0) audioIcon.innerText = "🔇"; else if (val < 50) audioIcon.innerText = "🔉"; else audioIcon.innerText = "🔊";
         };
 
-        // KULLANICI ARAMA FONKSİYONU (SOL MENÜ)
         async function handleSearchKey(e) {
             if (e.key === 'Enter') {
                 let query = document.getElementById('sidebarSearchInput').value.trim().toLowerCase();
                 if (!query) return;
-
                 const { data: user, error } = await supabaseClient.from('profiles').select('*').eq('username', query).single();
-                if (error || !user) {
-                    showToast("Not Found", `User "@${query}" not found!`, "⚠️");
-                    return;
-                }
-
+                if (error || !user) { showToast("Not Found", `User "@${query}" not found!`, "⚠️"); return; }
                 viewSpecificUserProfile(user);
             }
         }
 
+        function getPlatformIcon(title, url) {
+            let t = (title + " " + url).toLowerCase();
+            if (t.includes('snapchat')) return 'https://api.iconify.design/simple-icons:snapchat.svg?color=%23FFFC00';
+            if (t.includes('youtube')) return 'https://api.iconify.design/simple-icons:youtube.svg?color=%23FF0000';
+            if (t.includes('discord')) return 'https://api.iconify.design/simple-icons:discord.svg?color=%235865F2';
+            if (t.includes('spotify')) return 'https://api.iconify.design/simple-icons:spotify.svg?color=%231DB954';
+            if (t.includes('instagram')) return 'https://api.iconify.design/simple-icons:instagram.svg?color=%23E4405F';
+            if (t.includes('x') || t.includes('twitter')) return 'https://api.iconify.design/simple-icons:x.svg?color=%23ffffff';
+            if (t.includes('tiktok')) return 'https://api.iconify.design/simple-icons:tiktok.svg?color=%2300f2fe';
+            if (t.includes('telegram')) return 'https://api.iconify.design/simple-icons:telegram.svg?color=%23229ED9';
+            if (t.includes('soundcloud')) return 'https://api.iconify.design/simple-icons:soundcloud.svg?color=%23FF3300';
+            if (t.includes('paypal')) return 'https://api.iconify.design/simple-icons:paypal.svg?color=%2300457C';
+            if (t.includes('github')) return 'https://api.iconify.design/simple-icons:github.svg?color=%23ffffff';
+            if (t.includes('roblox')) return 'https://api.iconify.design/simple-icons:roblox.svg?color=%23ffffff';
+            if (t.includes('cashapp')) return 'https://api.iconify.design/simple-icons:cashapp.svg?color=%2300D632';
+            if (t.includes('vk')) return 'https://api.iconify.design/simple-icons:vk.svg?color=%230077FF';
+            if (t.includes('steam')) return 'https://api.iconify.design/simple-icons:steam.svg?color=%23ffffff';
+            if (t.includes('kick')) return 'https://api.iconify.design/simple-icons:kick.svg?color=%2353FC18';
+            if (t.includes('pinterest')) return 'https://api.iconify.design/simple-icons:pinterest.svg?color=%23E60023';
+            if (t.includes('twitch')) return 'https://api.iconify.design/simple-icons:twitch.svg?color=%239146FF';
+            if (t.includes('reddit')) return 'https://api.iconify.design/simple-icons:reddit.svg?color=%23FF4500';
+            return 'https://api.iconify.design/lucide:globe.svg?color=%23ffffff';
+        }
+
+        function hexToRgba(hex, opacity) {
+            let c = hex.replace('#', '');
+            if (c.length === 3) c = c.split('').map(x => x + x).join('');
+            let num = parseInt(c, 16);
+            return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${opacity})`;
+        }
+
         function viewSpecificUserProfile(user) {
             document.getElementById('viewUsername').innerText = user.username;
-            document.getElementById('viewUidBadge').innerText = "UID: #" + (user.uid || 1);
-            document.getElementById('viewBio').innerText = localStorage.getItem('bio_' + user.username) || "";
+            
+            let userUid = parseInt(user.uid || 1);
+            let uidBadgeEl = document.getElementById('viewUidBadge');
+            uidBadgeEl.innerText = "UID: #" + userUid;
+
+            uidBadgeEl.className = "uid-badge-fancy";
+            if (userUid >= 1 && userUid <= 10) {
+                uidBadgeEl.classList.add('uid-tier-red');
+            } else if (userUid >= 11 && userUid <= 50) {
+                uidBadgeEl.classList.add('uid-tier-gold');
+            } else {
+                uidBadgeEl.classList.add('uid-tier-black');
+            }
+            
+            let bioEl = document.getElementById('viewBio');
+            bioEl.innerText = localStorage.getItem('bio_' + user.username) || "";
+            
+            let textColor = localStorage.getItem('colorText_' + user.username) || "#ffffff";
+            bioEl.style.color = textColor;
+
+            let locationVal = localStorage.getItem('location_' + user.username) || "";
+            document.getElementById('viewLocationDisplay').innerText = locationVal ? `📍 ${locationVal}` : "";
 
             let savedAvatar = localStorage.getItem('avatarFile_' + user.username);
             let savedBanner = localStorage.getItem('bannerFile_' + user.username);
+            let savedAudio = localStorage.getItem('audioFile_' + user.username);
 
             let avatarEl = document.getElementById('viewAvatar');
-            avatarEl.src = savedAvatar ? savedAvatar : "https://via.placeholder.com/84";
+            if (savedAvatar) {
+                avatarEl.src = savedAvatar;
+                avatarEl.style.display = "block";
+            } else {
+                avatarEl.style.display = "none";
+            }
 
             let bannerEl = document.getElementById('viewBanner');
-            if (savedBanner) {
-                bannerEl.src = savedBanner;
-                bannerEl.style.display = "block";
-            } else {
-                bannerEl.style.display = "none";
+            if (savedBanner) { 
+                bannerEl.src = savedBanner; 
+                bannerEl.style.display = "block"; 
+            } else { 
+                bannerEl.style.display = "none"; 
             }
 
             applyProfileBackground(user.username);
 
-            let opacity = (parseInt(localStorage.getItem('opacity_' + user.username)) || 85) / 100;
-            let accentColor = localStorage.getItem('accent_' + user.username) || "#8b5cf6";
-            
+            let opacityVal = (parseInt(localStorage.getItem('opacity_' + user.username)) ?? 85) / 100;
+            let blurVal = localStorage.getItem('blur_' + user.username) || "0";
+            let cardBgColorHex = localStorage.getItem('colorCardBg_' + user.username) || "#121217";
+            let accentColor = localStorage.getItem('colorAccent_' + user.username) || "#ffffff";
+
             let card = document.getElementById('viewProfileCard');
-            card.style.backgroundColor = `rgba(22, 22, 29, ${opacity})`;
-            card.style.setProperty('--dynamic-accent', accentColor);
+            card.style.backgroundColor = hexToRgba(cardBgColorHex, opacityVal);
 
-            let uidBadge = document.getElementById('viewUidBadge');
-            uidBadge.style.borderColor = accentColor;
-            uidBadge.style.backgroundColor = accentColor + "33";
+            if (blurVal > 0) {
+                card.style.backdropFilter = `blur(${blurVal}px)`;
+                card.style.webkitBackdropFilter = `blur(${blurVal}px)`;
+            } else {
+                card.style.backdropFilter = 'none';
+                card.style.webkitBackdropFilter = 'none';
+            }
 
-            // Rozetler
+            card.style.setProperty('--accent', accentColor);
+
+            let useDeco = localStorage.getItem('toggleAvatarDecoration_' + user.username) === 'true';
+            document.getElementById('viewAvatarDecoration').style.display = useDeco ? "block" : "none";
+
             let publicBadges = document.getElementById('viewBadgesContainer');
             publicBadges.innerHTML = "";
             let badges = [];
-            if ((user.uid || 1) === ADMIN_UID) {
-                badges.push(`<span class="badge badge-admin">👑 Administrator</span>`);
-            }
-            if ((user.uid || 1) <= 10) badges.push(`<span class="badge badge-beta">🛡️ Beta User</span>`);
-            badges.push(`<span class="badge badge-sub">⭐ Active Member</span>`);
+            if (userUid === ADMIN_UID) badges.push(`<span class="badge badge-admin">Administrator</span>`);
+            if (userUid <= 10) badges.push(`<span class="badge badge-beta">Beta User</span>`);
+            badges.push(`<span class="badge badge-sub">Active Member</span>`);
             badges.forEach(b => publicBadges.innerHTML += b);
 
-            // Linkler
             let links = JSON.parse(localStorage.getItem('links_' + user.username) || "[]");
             let pLinks = document.getElementById('publicLinksList');
             pLinks.innerHTML = "";
+            
             links.forEach(l => {
-                pLinks.innerHTML += `<a href="${l.url}" target="_blank" class="public-link-btn" style="--dynamic-accent: ${accentColor};">${l.title}</a>`;
+                let iconUrl = getPlatformIcon(l.title, l.url);
+                pLinks.innerHTML += `<a href="${l.url}" target="_blank" class="public-logo-link" title="${l.title}"><img src="${iconUrl}" class="public-logo-img" alt="${l.title}"></a>`;
             });
 
-            // Ekran geçişleri
+            let viewerKey = 'viewed_' + user.username;
+            if (!currentUser || currentUser.username !== user.username) {
+                let viewsKey = 'views_' + user.username;
+                let currentViews = parseInt(localStorage.getItem(viewsKey) || "0");
+                if (!sessionStorage.getItem(viewerKey)) {
+                    currentViews++;
+                    localStorage.setItem(viewsKey, currentViews);
+                    sessionStorage.setItem(viewerKey, "true");
+                }
+            }
+
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('profileViewSection').style.display = 'flex';
+            
+            document.getElementById('audioControlWidget').style.display = 'flex';
+            let currentVol = bgAudioSlider.value / 100;
+
+            if (savedAudio) {
+                profileAudioElement.src = savedAudio;
+                profileAudioElement.loop = true;
+                profileAudioElement.volume = currentVol;
+                bgVideo.muted = true;
+                profileAudioElement.play().catch(() => {
+                    window.addEventListener('click', () => profileAudioElement.play(), { once: true });
+                });
+            } else {
+                bgVideo.muted = false;
+                bgVideo.volume = currentVol;
+                bgVideo.play().catch(() => {
+                    window.addEventListener('click', () => bgVideo.play(), { once: true });
+                });
+            }
         }
 
-        // PROFİL ARKA PLANINI UYGULAMA (Kullanıcıya özel video/görsel/gif)
         function applyProfileBackground(username) {
             let savedBg = localStorage.getItem('bgFile_' + username);
             document.getElementById('backgroundContainer').style.display = 'block';
 
             if (savedBg) {
                 if (savedBg.startsWith('data:video') || savedBg.endsWith('.mp4')) {
-                    bgVideo.src = savedBg;
-                    bgVideo.style.display = 'block';
-                    bgImage.style.display = 'none';
-                    bgVideo.load();
-                    bgVideo.play().catch(e => console.log(e));
+                    bgVideo.src = savedBg; bgVideo.style.display = 'block'; bgImage.style.display = 'none'; bgVideo.load();
                 } else {
-                    bgImage.src = savedBg;
-                    bgImage.style.display = 'block';
-                    bgVideo.style.display = 'none';
-                    bgVideo.pause();
+                    bgImage.src = savedBg; bgImage.style.display = 'block'; bgVideo.style.display = 'none'; bgVideo.pause();
                 }
             } else {
-                bgVideo.src = "arkaplan.mp4";
-                bgVideo.style.display = 'block';
-                bgImage.style.display = 'none';
-                bgVideo.load();
-                bgVideo.play().catch(e => console.log(e));
+                bgVideo.src = "arkaplan.mp4"; bgVideo.style.display = 'block'; bgImage.style.display = 'none'; bgVideo.load();
             }
         }
 
-        // GEÇİCİ DOSYA TUTUCULARI (Save Changes butonuna basılana kadar bekler)
-        let tempBgData = null;
-        let tempAvatarData = null;
-        let tempBannerData = null;
-        let removeBgFlag = false;
-        let removeAvatarFlag = false;
-        let removeBannerFlag = false;
+        let tempBgData = null, tempAvatarData = null, tempBannerData = null, tempAudioData = null;
 
         document.getElementById('inputBgFile').onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
-                removeBgFlag = false;
                 document.getElementById('bgFileName').innerText = file.name;
-                const reader = new FileReader();
-                reader.onload = (uploadEvent) => {
-                    tempBgData = uploadEvent.target.result;
-                };
-                reader.readAsDataURL(file);
+                const r = new FileReader(); r.onload = (ev) => { tempBgData = ev.target.result; }; r.readAsDataURL(file);
             }
         };
-
         document.getElementById('inputAvatarFile').onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
-                removeAvatarFlag = false;
                 document.getElementById('avatarFileName').innerText = file.name;
-                const reader = new FileReader();
-                reader.onload = (uploadEvent) => {
-                    tempAvatarData = uploadEvent.target.result;
-                };
-                reader.readAsDataURL(file);
+                const r = new FileReader(); r.onload = (ev) => { tempAvatarData = ev.target.result; }; r.readAsDataURL(file);
             }
         };
-
         document.getElementById('inputBannerFile').onchange = (e) => {
             const file = e.target.files[0];
             if (file) {
-                removeBannerFlag = false;
                 document.getElementById('bannerFileName').innerText = file.name;
-                const reader = new FileReader();
-                reader.onload = (uploadEvent) => {
-                    tempBannerData = uploadEvent.target.result;
-                };
-                reader.readAsDataURL(file);
+                const r = new FileReader(); r.onload = (ev) => { tempBannerData = ev.target.result; }; r.readAsDataURL(file);
             }
         };
-
-        function removeFile(type) {
-            if (type === 'bg') {
-                removeBgFlag = true;
-                tempBgData = null;
-                document.getElementById('bgFileName').innerText = "No file selected";
-                document.getElementById('inputBgFile').value = "";
-                showToast("Kaldırıldı", "Arka plan silindi. Kaydetmek için 'Save Changes' butonuna basın.");
-            } else if (type === 'avatar') {
-                removeAvatarFlag = true;
-                tempAvatarData = null;
-                document.getElementById('avatarFileName').innerText = "No file selected";
-                document.getElementById('inputAvatarFile').value = "";
-                showToast("Kaldırıldı", "Avatar silindi. Kaydetmek için 'Save Changes' butonuna basın.");
-            } else if (type === 'banner') {
-                removeBannerFlag = true;
-                tempBannerData = null;
-                document.getElementById('bannerFileName').innerText = "No file selected";
-                document.getElementById('inputBannerFile').value = "";
-                showToast("Kaldırıldı", "Banner silindi. Kaydetmek için 'Save Changes' butonuna basın.");
+        document.getElementById('inputAudioFile').onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('audioFileName').innerText = file.name;
+                const r = new FileReader(); r.onload = (ev) => { tempAudioData = ev.target.result; }; r.readAsDataURL(file);
             }
-        }
+        };
 
         function showToast(title, desc, icon = "⚡") {
             const toast = document.getElementById('toastNotification');
             document.getElementById('toastTitle').innerText = title;
             document.getElementById('toastDesc').innerText = desc;
             document.getElementById('toastIcon').innerText = icon;
-            
             toast.classList.add('show');
             clearTimeout(window.toastTimeout);
-            window.toastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3500);
+            window.toastTimeout = setTimeout(() => { toast.classList.remove('show'); }, 3500);
         }
 
         window.addEventListener('DOMContentLoaded', async () => {
@@ -1710,6 +997,7 @@
             if (savedUsername) {
                 const { data: user } = await supabaseClient.from('profiles').select('*').eq('username', savedUsername).single();
                 if (user) {
+                    showToast("Başarılı", "Otomatik giriş yapıldı!", "🚀");
                     currentUser = user;
                     initUserSession();
                 }
@@ -1721,7 +1009,6 @@
             document.getElementById('authMessage').innerText = "";
             document.getElementById('rememberMeRow').style.display = isRegisterMode ? "none" : "flex";
             document.getElementById('authInviteKey').style.display = isRegisterMode ? "block" : "none";
-            applyTranslations();
         }
 
         document.getElementById('authActionBtn').onclick = async () => {
@@ -1730,38 +1017,36 @@
             const inviteKey = document.getElementById('authInviteKey').value.trim();
             const msg = document.getElementById('authMessage');
 
-            if (!username || !password) { msg.innerText = "Please fill in all fields!"; return; }
-
-            const t = translations[currentLang] || translations['tr'];
+            if (!username || !password) { msg.innerText = "Lütfen tüm alanları doldurun!"; return; }
 
             if (isRegisterMode) {
-                if (!inviteKey) { msg.innerText = "Invite key is required!"; return; }
+                if (!inviteKey) { msg.innerText = "Davetiye kodu gerekli!"; return; }
                 let activeKeys = JSON.parse(localStorage.getItem('custom_invite_keys') || "[]");
                 let usedKeys = JSON.parse(localStorage.getItem('used_invite_keys') || "[]");
-                
-                if (!activeKeys.includes(inviteKey) && !inviteKey.startsWith("ADMIN")) { msg.innerText = "Invalid invite key!"; return; }
-                if (usedKeys.includes(inviteKey)) { msg.innerText = "This invite key has already been used!"; return; }
+                if (!activeKeys.includes(inviteKey) && !inviteKey.startsWith("ADMIN")) { msg.innerText = "Geçersiz davetiye kodu!"; return; }
+                if (usedKeys.includes(inviteKey)) { msg.innerText = "Bu davetiye kodu zaten kullanılmış!"; return; }
 
+                showToast("Başarılı", `Hoş geldin @${username}, hesap oluşturuluyor...`, "🎉");
                 const { count } = await supabaseClient.from('profiles').select('*', { count: 'exact', head: true });
                 const newUid = (count || 0) + 1;
 
                 const { data: newUser, error } = await supabaseClient.from('profiles').insert([{ username, password, uid: newUid }]).select().single();
                 if (error) { msg.innerText = error.message; return; }
 
-                usedKeys.push(inviteKey);
-                localStorage.setItem('used_invite_keys', JSON.stringify(usedKeys));
-                currentUser = newUser;
-                localStorage.setItem('remembered_username', newUser.username);
-                
-                showToast(t.toast_register_success, `Hoş geldin @${newUser.username}, hesabın oluşturuldu.`, "🎉");
+                usedKeys.push(inviteKey); localStorage.setItem('used_invite_keys', JSON.stringify(usedKeys));
+                currentUser = newUser; localStorage.setItem('remembered_username', newUser.username);
                 initUserSession();
             } else {
+                showToast("Başarılı", `Giriş yapılıyor, @${username}...`, "🚀");
                 const { data: user, error } = await supabaseClient.from('profiles').select('*').eq('username', username).single();
-                if (error || !user || user.password !== password) { msg.innerText = "Invalid username or password!"; return; }
+                if (error || !user || user.password !== password) { 
+                    msg.innerText = "Geçersiz kullanıcı adı veya şifre!"; 
+                    document.getElementById('toastNotification').classList.remove('show');
+                    return; 
+                }
+
                 currentUser = user;
                 if (document.getElementById('rememberMeCheckbox').checked) localStorage.setItem('remembered_username', user.username);
-                
-                showToast(t.toast_login_success, `Tekrar hoş geldin, @${user.username}!`, "🚀");
                 initUserSession();
             }
         };
@@ -1769,24 +1054,30 @@
         function initUserSession() {
             document.getElementById('loginSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
-            
-            // Giriş yapıldığında kanvas arka planı gizle, dil seçicisini gizle, panel öğelerini aç
             document.getElementById('authCanvasBackground').style.display = 'none';
             document.getElementById('languageSelectorContainer').style.display = 'none';
-            applyProfileBackground(currentUser.username);
-            document.getElementById('audioControlWidget').style.display = 'flex';
+            document.getElementById('backgroundContainer').style.display = 'none';
+            document.getElementById('audioControlWidget').style.display = 'none';
+            if (bgVideo) { bgVideo.pause(); bgVideo.muted = true; }
 
             document.getElementById('sidebarUsernameText').innerText = currentUser.username;
-            document.getElementById('sidebarAvatarImg').src = localStorage.getItem('avatarFile_' + currentUser.username) || "https://via.placeholder.com/40";
+            
+            let sidebarAvatar = localStorage.getItem('avatarFile_' + currentUser.username);
+            let sbAvatarImg = document.getElementById('sidebarAvatarImg');
+            if (sidebarAvatar) {
+                sbAvatarImg.src = sidebarAvatar;
+                sbAvatarImg.style.display = 'block';
+            } else {
+                sbAvatarImg.style.display = 'none';
+            }
+
             document.getElementById('sumUsername').innerText = currentUser.username;
             document.getElementById('sumUid').innerText = "#" + (currentUser.uid || 1);
             
-            let views = parseInt(localStorage.getItem('views_' + currentUser.username) || "33");
+            let views = parseInt(localStorage.getItem('views_' + currentUser.username) || "0");
             document.getElementById('sumViews').innerText = views;
-            document.getElementById('analyticsTotalViews').innerText = views;
 
             let isAdmin = (currentUser.uid || 1) === ADMIN_UID;
-            
             if (isAdmin) {
                 document.getElementById('adminMenuLink').style.display = 'flex';
                 loadAdminPanelData();
@@ -1804,13 +1095,12 @@
             localStorage.removeItem('remembered_username');
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('loginSection').style.display = 'flex';
-            
-            // Çıkış yapıldığında tekrar kanvasa ve sol altta dil seçicisine dön
             document.getElementById('backgroundContainer').style.display = 'none';
             document.getElementById('authCanvasBackground').style.display = 'block';
             document.getElementById('languageSelectorContainer').style.display = 'flex';
             document.getElementById('audioControlWidget').style.display = 'none';
-            if(bgVideo) bgVideo.pause();
+            if(bgVideo) { bgVideo.pause(); bgVideo.muted = true; }
+            profileAudioElement.pause();
         }
 
         function switchTab(tabId, el) {
@@ -1818,156 +1108,134 @@
             document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             el.classList.add('active');
-            
-            if (tabId === 'adminTab') {
-                loadAdminPanelData();
+            if (tabId === 'adminTab') loadAdminPanelData();
+        }
+
+        function getSavedLinks() { return JSON.parse(localStorage.getItem('links_' + currentUser.username) || "[]"); }
+        
+        function quickAddLink(title, defaultUrl) {
+            let url = prompt(`${title} için bağlantı adresini (URL) girin:`, defaultUrl);
+            if (url) {
+                let links = getSavedLinks();
+                links.push({ title, url });
+                localStorage.setItem('links_' + currentUser.username, JSON.stringify(links));
+                renderLinks();
+                showToast("Success", `${title} bağlantısı eklendi!`);
             }
         }
 
-        function getSavedLinks() {
-            return JSON.parse(localStorage.getItem('links_' + currentUser.username) || "[]");
-        }
-        function addNewLink() {
-            let title = document.getElementById('newLinkTitle').value.trim();
-            let url = document.getElementById('newLinkUrl').value.trim();
-            if (!title || !url) { showToast("Error", "Title and URL cannot be empty!", "⚠️"); return; }
-            
-            let links = getSavedLinks();
-            links.push({ title, url });
-            localStorage.setItem('links_' + currentUser.username, JSON.stringify(links));
-            document.getElementById('newLinkTitle').value = "";
-            document.getElementById('newLinkUrl').value = "";
-            renderLinks();
-            showToast("Success", "Link added successfully!");
-        }
         function deleteLink(index) {
-            let links = getSavedLinks();
-            links.splice(index, 1);
+            let links = getSavedLinks(); links.splice(index, 1);
             localStorage.setItem('links_' + currentUser.username, JSON.stringify(links));
-            renderLinks();
-            showToast("Success", "Link deleted!");
+            renderLinks(); showToast("Success", "Bağlantı silindi!");
         }
+
         function renderLinks() {
             let links = getSavedLinks();
             let container = document.getElementById('linksContainer');
-            container.innerHTML = links.length === 0 ? '<div style="color:var(--text-muted); font-size:13px;">No links added yet.</div>' : '';
+            container.innerHTML = links.length === 0 ? '<div style="color:var(--text-muted); font-size:13px;">Henüz bağlantı eklenmemiş.</div>' : '';
             links.forEach((l, idx) => {
-                container.innerHTML += `<div class="link-item-row"><div><b>${l.title}</b><div style="font-size:11px; color:var(--text-muted);">${l.url}</div></div><button onclick="deleteLink(${idx})" style="width:auto; padding:6px 12px; background:var(--danger); margin:0;">Delete</button></div>`;
+                let iconUrl = getPlatformIcon(l.title, l.url);
+                container.innerHTML += `
+                    <div class="link-item-card">
+                        <div class="link-card-left">
+                            <img src="${iconUrl}" style="width:22px; height:22px; object-fit:contain;" alt="icon">
+                            <div>
+                                <b style="font-size:13px;">${l.title}</b>
+                                <div style="font-size:11px; color:var(--text-muted);">${l.url}</div>
+                            </div>
+                        </div>
+                        <div class="link-card-actions">
+                            <div class="link-action-icon-btn" onclick="window.open('${l.url}', '_blank')" title="Görüntüle">👁️</div>
+                            <div class="link-action-icon-btn danger" onclick="deleteLink(${idx})" title="Sil">🗑️</div>
+                        </div>
+                    </div>`;
             });
         }
 
-        // SAVE CHANGES: BİYOGRAFİ, ŞEFFAFLIK, RENK VE DOSYALARI KAYDET VEYA KALDIR
         function saveCustomizations() {
             let bio = document.getElementById('inputBio').value.trim();
             let opacity = document.getElementById('inputOpacity').value;
-            let accent = document.getElementById('inputAccentColor').value;
+            let blur = document.getElementById('inputBlur').value;
+            let bgEffect = document.getElementById('selectBgEffect').value;
+            let nameEffect = document.getElementById('selectNameEffect').value;
+            let location = document.getElementById('inputLocation').value.trim();
+
+            let colorAccent = document.getElementById('colorAccent').value;
+            let colorText = document.getElementById('colorText').value;
+            let colorCardBg = document.getElementById('colorCardBg').value;
+            let colorIcon = document.getElementById('colorIcon').value;
 
             localStorage.setItem('bio_' + currentUser.username, bio);
             localStorage.setItem('opacity_' + currentUser.username, opacity);
-            localStorage.setItem('accent_' + currentUser.username, accent);
+            localStorage.setItem('blur_' + currentUser.username, blur);
+            localStorage.setItem('bgEffect_' + currentUser.username, bgEffect);
+            localStorage.setItem('nameEffect_' + currentUser.username, nameEffect);
+            localStorage.setItem('location_' + currentUser.username, location);
 
-            if (removeBgFlag) {
-                localStorage.removeItem('bgFile_' + currentUser.username);
-                applyProfileBackground(currentUser.username);
-                removeBgFlag = false;
-            } else if (tempBgData) {
-                localStorage.setItem('bgFile_' + currentUser.username, tempBgData);
-                applyProfileBackground(currentUser.username);
-                tempBgData = null;
-            }
+            localStorage.setItem('colorAccent_' + currentUser.username, colorAccent);
+            localStorage.setItem('colorText_' + currentUser.username, colorText);
+            localStorage.setItem('colorCardBg_' + currentUser.username, colorCardBg);
+            localStorage.setItem('colorIcon_' + currentUser.username, colorIcon);
 
-            if (removeAvatarFlag) {
-                localStorage.removeItem('avatarFile_' + currentUser.username);
-                document.getElementById('sidebarAvatarImg').src = "https://via.placeholder.com/40";
-                removeAvatarFlag = false;
-            } else if (tempAvatarData) {
-                localStorage.setItem('avatarFile_' + currentUser.username, tempAvatarData);
-                document.getElementById('sidebarAvatarImg').src = tempAvatarData;
-                tempAvatarData = null;
-            }
+            if (tempBgData) { localStorage.setItem('bgFile_' + currentUser.username, tempBgData); tempBgData = null; }
+            if (tempAvatarData) { localStorage.setItem('avatarFile_' + currentUser.username, tempAvatarData); tempAvatarData = null; }
+            if (tempBannerData) { localStorage.setItem('bannerFile_' + currentUser.username, tempBannerData); tempBannerData = null; }
+            if (tempAudioData) { localStorage.setItem('audioFile_' + currentUser.username, tempAudioData); tempAudioData = null; }
 
-            if (removeBannerFlag) {
-                localStorage.removeItem('bannerFile_' + currentUser.username);
-                removeBannerFlag = false;
-            } else if (tempBannerData) {
-                localStorage.setItem('bannerFile_' + currentUser.username, tempBannerData);
-                tempBannerData = null;
-            }
-
-            showToast("Saved", "Theme and profile settings updated successfully!");
+            showToast("Saved", "Özelleştirme ayarları başarıyla kaydedildi!");
         }
 
         function loadCustomizationsToPanel() {
             document.getElementById('inputBio').value = localStorage.getItem('bio_' + currentUser.username) || "";
-            document.getElementById('inputOpacity').value = localStorage.getItem('opacity_' + currentUser.username) || 85;
-            document.getElementById('inputAccentColor').value = localStorage.getItem('accent_' + currentUser.username) || "#8b5cf6";
+            
+            let opacity = localStorage.getItem('opacity_' + currentUser.username) ?? 85;
+            document.getElementById('inputOpacity').value = opacity;
+            document.getElementById('valOpacity').innerText = opacity;
 
-            if (localStorage.getItem('bgFile_' + currentUser.username)) {
-                document.getElementById('bgFileName').innerText = "Loaded from storage ✓";
-            } else {
-                document.getElementById('bgFileName').innerText = "No file selected";
-            }
-            if (localStorage.getItem('avatarFile_' + currentUser.username)) {
-                document.getElementById('avatarFileName').innerText = "Loaded from storage ✓";
-            } else {
-                document.getElementById('avatarFileName').innerText = "No file selected";
-            }
-            if (localStorage.getItem('bannerFile_' + currentUser.username)) {
-                document.getElementById('bannerFileName').innerText = "Loaded from storage ✓";
-            } else {
-                document.getElementById('bannerFileName').innerText = "No file selected";
-            }
+            let blur = localStorage.getItem('blur_' + currentUser.username) || 0;
+            document.getElementById('inputBlur').value = blur;
+            document.getElementById('valBlur').innerText = blur;
+
+            document.getElementById('selectBgEffect').value = localStorage.getItem('bgEffect_' + currentUser.username) || "blur";
+            document.getElementById('selectNameEffect').value = localStorage.getItem('nameEffect_' + currentUser.username) || "glow";
+            document.getElementById('inputLocation').value = localStorage.getItem('location_' + currentUser.username) || "";
+
+            document.getElementById('colorAccent').value = localStorage.getItem('colorAccent_' + currentUser.username) || "#ffffff";
+            document.getElementById('colorText').value = localStorage.getItem('colorText_' + currentUser.username) || "#ffffff";
+            document.getElementById('colorCardBg').value = localStorage.getItem('colorCardBg_' + currentUser.username) || "#121217";
+            document.getElementById('colorIcon').value = localStorage.getItem('colorIcon_' + currentUser.username) || "#ffffff";
+
+            if (localStorage.getItem('bgFile_' + currentUser.username)) document.getElementById('bgFileName').innerText = "Yüklendi ✓";
+            if (localStorage.getItem('avatarFile_' + currentUser.username)) document.getElementById('avatarFileName').innerText = "Yüklendi ✓";
+            if (localStorage.getItem('bannerFile_' + currentUser.username)) document.getElementById('bannerFileName').innerText = "Yüklendi ✓";
+            if (localStorage.getItem('audioFile_' + currentUser.username)) document.getElementById('audioFileName').innerText = "Yüklendi ✓";
         }
 
         function renderBadges() {
             let list = document.getElementById('userBadgesList');
             let publicBadges = document.getElementById('viewBadgesContainer');
             list.innerHTML = ""; publicBadges.innerHTML = "";
-
             let badges = [];
-            let isAdmin = (currentUser.uid || 1) === ADMIN_UID;
-            if (isAdmin) {
-                badges.push(`<span class="badge badge-admin">👑 Administrator</span>`);
-            }
-            if ((currentUser.uid || 1) <= 10) badges.push(`<span class="badge badge-beta">🛡️ Beta User</span>`);
-            badges.push(`<span class="badge badge-sub">⭐ Active Member</span>`);
-
-            badges.forEach(b => {
-                list.innerHTML += b;
-                publicBadges.innerHTML += b;
-            });
+            let uid = currentUser.uid || 1;
+            if (uid === ADMIN_UID) badges.push(`<span class="badge badge-admin">Administrator</span>`);
+            if (uid <= 10) badges.push(`<span class="badge badge-beta">Beta User</span>`);
+            badges.push(`<span class="badge badge-sub">Active Member</span>`);
+            badges.forEach(b => { list.innerHTML += b; publicBadges.innerHTML += b; });
         }
 
-        // ADMIN PANEL & RANDOM INVITE FONKSİYONLARI
         async function loadAdminPanelData() {
             if ((currentUser.uid || 1) !== ADMIN_UID) return;
-
             const { data: users, error } = await supabaseClient.from('profiles').select('*');
-            if (error) {
-                showToast("Error", "Failed to load users list.", "⚠️");
-                return;
-            }
-
+            if (error) return;
             document.getElementById('adminTotalUsersCount').innerText = users.length;
             let tableBody = document.getElementById('adminUsersTableBody');
             tableBody.innerHTML = "";
-
             users.forEach(u => {
                 let isUsrAdmin = (u.uid || 1) === ADMIN_UID;
                 let roleBadge = isUsrAdmin ? '<span style="color:#f87171; font-weight:bold;">Admin</span>' : '<span style="color:var(--text-muted);">Member</span>';
-                
-                tableBody.innerHTML += `
-                    <tr>
-                        <td>#${u.uid || 1}</td>
-                        <td><b>${u.username}</b></td>
-                        <td>${roleBadge}</td>
-                        <td>
-                            ${!isUsrAdmin ? `<button class="admin-action-btn btn-ban" onclick="deleteUserAccount('${u.username}')">Delete</button>` : '<span style="font-size:11px; color:var(--text-muted);">Protected</span>'}
-                        </td>
-                    </tr>
-                `;
+                tableBody.innerHTML += `<tr><td>#${u.uid || 1}</td><td><b>${u.username}</b></td><td>${roleBadge}</td><td>${!isUsrAdmin ? `<button class="admin-action-btn btn-ban" onclick="deleteUserAccount('${u.username}')">Delete</button>` : '<span style="font-size:11px; color:var(--text-muted);">Protected</span>'}</td></tr>`;
             });
-
             renderInvitesTable();
         }
 
@@ -1975,77 +1243,46 @@
             let countInput = parseInt(document.getElementById('inviteQuantityInput').value) || 1;
             let activeKeys = JSON.parse(localStorage.getItem('custom_invite_keys') || "[]");
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-
             for (let c = 0; c < countInput; c++) {
-                let part1 = '', part2 = '';
-                for (let i = 0; i < 4; i++) part1 += chars.charAt(Math.floor(Math.random() * chars.length));
-                for (let i = 0; i < 4; i++) part2 += chars.charAt(Math.floor(Math.random() * chars.length));
-                
-                let newKey = `MUYABE-${part1}-${part2}`;
-                activeKeys.push(newKey);
+                let p1 = '', p2 = '';
+                for (let i = 0; i < 4; i++) p1 += chars.charAt(Math.floor(Math.random() * chars.length));
+                for (let i = 0; i < 4; i++) p2 += chars.charAt(Math.floor(Math.random() * chars.length));
+                activeKeys.push(`MUYABE-${p1}-${p2}`);
             }
-
             localStorage.setItem('custom_invite_keys', JSON.stringify(activeKeys));
-            showToast("Success", `${countInput} new invite key(s) generated!`);
+            showToast("Success", `${countInput} yeni davetiye oluşturuldu!`);
             renderInvitesTable();
         }
 
         function renderInvitesTable() {
             let activeKeys = JSON.parse(localStorage.getItem('custom_invite_keys') || "[]");
             let usedKeys = JSON.parse(localStorage.getItem('used_invite_keys') || "[]");
-            let invitesTableBody = document.getElementById('adminInvitesTableBody');
-            
+            let tbody = document.getElementById('adminInvitesTableBody');
             document.getElementById('adminInviteCount').innerText = `${activeKeys.length} Active`;
-            invitesTableBody.innerHTML = "";
-
+            tbody.innerHTML = "";
             activeKeys.forEach(key => {
                 let isUsed = usedKeys.includes(key);
-                let statusBadge = isUsed 
-                    ? '<span style="color:var(--danger); font-weight:bold;">Used</span>' 
-                    : '<span style="color:var(--success); font-weight:bold;">Available</span>';
-
-                invitesTableBody.innerHTML += `
-                    <tr>
-                        <td><code><b>${key}</b></code></td>
-                        <td>${statusBadge}</td>
-                        <td>
-                            <button class="admin-action-btn btn-copy" onclick="navigator.clipboard.writeText('${key}'); showToast('Copied', 'Invite key copied to clipboard!');">Copy</button>
-                            <button class="admin-action-btn btn-ban" onclick="deleteInviteKey('${key}')">Delete</button>
-                        </td>
-                    </tr>
-                `;
+                let statusBadge = isUsed ? '<span style="color:var(--danger); font-weight:bold;">Used</span>' : '<span style="color:var(--success); font-weight:bold;">Available</span>';
+                tbody.innerHTML += `<tr><td><code><b>${key}</b></code></td><td>${statusBadge}</td><td><button class="admin-action-btn btn-copy" onclick="navigator.clipboard.writeText('${key}'); showToast('Kopyalandı', 'Kod panoya kopyalandı!');">Copy</button></td></tr>`;
             });
         }
 
-        function deleteInviteKey(key) {
-            let activeKeys = JSON.parse(localStorage.getItem('custom_invite_keys') || "[]");
-            activeKeys = activeKeys.filter(k => k !== key);
-            localStorage.setItem('custom_invite_keys', JSON.stringify(activeKeys));
-            showToast("Success", "Invite key deleted.");
-            renderInvitesTable();
-        }
-
         async function deleteUserAccount(username) {
-            if (confirm(`Are you sure you want to delete user: ${username}?`)) {
-                const { error } = await supabaseClient.from('profiles').delete().eq('username', username);
-                if (error) {
-                    showToast("Error", error.message, "⚠️");
-                } else {
-                    showToast("Success", `User ${username} deleted.`);
-                    loadAdminPanelData();
-                }
+            if (confirm(`Kullanıcı silinsin mi: ${username}?`)) {
+                await supabaseClient.from('profiles').delete().eq('username', username);
+                loadAdminPanelData();
             }
         }
 
-        // VIEW MY PAGE: KULLANICI KENDİ SAYFASINI AÇTIĞINDA
-        document.getElementById('viewMyPageBtn').onclick = () => {
-            viewSpecificUserProfile(currentUser);
-        };
+        document.getElementById('viewMyPageBtn').onclick = () => { viewSpecificUserProfile(currentUser); };
 
         function closeMyPage() {
             document.getElementById('profileViewSection').style.display = 'none';
             document.getElementById('dashboardSection').style.display = 'block';
-            applyProfileBackground(currentUser.username);
+            document.getElementById('backgroundContainer').style.display = 'none';
+            document.getElementById('audioControlWidget').style.display = 'none';
+            if (bgVideo) { bgVideo.pause(); bgVideo.muted = true; }
+            profileAudioElement.pause();
         }
     </script>
 </body>
