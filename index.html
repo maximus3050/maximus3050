@@ -155,8 +155,10 @@
 
         .message { font-size: 13px; margin-top: 10px; color: var(--danger); }
         .auth-switch-text { margin-top: 15px; font-size: 13px; color: var(--text-muted); }
-        .auth-switch-text span { color: #ffffff; cursor: pointer; font-weight: 600; text-decoration: underline; }
-        .invite-buy-link { display: block; margin-top: 15px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 600; }
+        .auth-switch-text span { color: #ffffff; cursor: pointer; font-weight: 600; }
+        .auth-switch-text span#authSwitchTrigger { text-decoration: underline; }
+        
+        .invite-buy-link { display: block; margin-top: 15px; font-size: 13px; color: var(--text-muted); text-decoration: none; font-weight: 600; cursor: pointer; }
         .invite-buy-link:hover { color: #ffffff; }
 
         .dashboard-container { display: none; height: 100vh; width: 100vw; box-sizing: border-box; }
@@ -410,10 +412,10 @@
             <p id="authMessage" class="message"></p>
             
             <div class="auth-switch-text" id="switchTextContainer">
-                <span id="lblNoAccount">Don't have an account?</span> <span id="authSwitchTrigger" onclick="toggleAuthMode()">Sign Up</span>
+                <span id="lblNoAccount" style="color: var(--text-muted); font-weight: normal; cursor: default;">Don't have an account?</span> <span id="authSwitchTrigger" onclick="toggleAuthMode()">Sign Up</span>
             </div>
 
-            <a href="https://www.shopier.com/orvin1337/49287395" target="_blank" class="invite-buy-link" id="lblBuyInvite">Buy Invite</a>
+            <a href="https://www.itemsatis.com/microsoft/menacetop-lifetime-invite-5593502.html" target="_blank" class="invite-buy-link" id="lblBuyInvite">Buy Invite</a>
         </div>
     </div>
 
@@ -840,11 +842,9 @@
             const t = translations[currentLang] || translations['en'];
             document.getElementById('viewLocationDisplay').innerText = locationVal ? `📍 ${locationVal}` : t.noLocation;
 
-            // Veritabanındaki 'avatar' sütunu okunuyor
             let avatarEl = document.getElementById('viewAvatar');
             if (user.avatar) { avatarEl.src = user.avatar; avatarEl.style.display = "block"; } else { avatarEl.style.display = "none"; }
 
-            // Veritabanındaki 'banner' sütunu okunuyor
             let bannerEl = document.getElementById('viewBanner');
             if (user.banner) { bannerEl.src = user.banner; bannerEl.style.display = "block"; } else { bannerEl.style.display = "none"; }
 
@@ -1178,7 +1178,7 @@
             if (tempAvatarFile) {
                 let url = await uploadFileToSupabase(tempAvatarFile, 'avatars');
                 if (url) { 
-                    updateData.avatar = url; // Veritabanındaki 'avatar' sütunu ile eşleştirildi
+                    updateData.avatar = url;
                     currentUser.avatar = url;
                     document.getElementById('sidebarAvatarImg').src = url;
                     document.getElementById('sidebarAvatarImg').style.display = "block";
@@ -1188,7 +1188,7 @@
             if (tempBannerFile) {
                 let url = await uploadFileToSupabase(tempBannerFile, 'banners');
                 if (url) { 
-                    updateData.banner = url; // Veritabanındaki 'banner' sütunu ile eşleştirildi
+                    updateData.banner = url;
                     currentUser.banner = url; 
                 }
                 tempBannerFile = null;
@@ -1204,7 +1204,6 @@
             currentUser.blur = blur;
             currentUser.location = location;
 
-            // Supabase tablosundaki mevcut gerçek sütun adlarıyla güncelleme yapılıyor
             const { error } = await supabaseClient.from('profiles').update(updateData).eq('uid', currentUser.uid);
 
             if (error) {
