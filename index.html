@@ -1199,7 +1199,7 @@
             currentUser.blur = blur;
             currentUser.location = location;
 
-            // Kesin ve sorunsuz çözüm: Tablonun asıl birincil anahtarı (uid) üzerinden eşleme yapılıyor
+            // KESİN ÇÖZÜM: Supabase tablosunun primary key'i uid olduğu için sorgu kesinlikle uid üzerinden atılıyor
             const { error } = await supabaseClient.from('profiles').update(updateData).eq('uid', currentUser.uid);
 
             if (error) {
