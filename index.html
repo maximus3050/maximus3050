@@ -958,7 +958,7 @@
             else if (type === 'banner') { updateObj = { banner_url: null }; currentUser.banner_url = null; document.getElementById('bannerFileName').innerText = "Dosya yükle"; document.getElementById('inputBannerFile').value = ""; }
             else if (type === 'audio') { updateObj = { audio_url: null }; currentUser.audio_url = null; document.getElementById('audioFileName').innerText = "Ses dosyası seç"; document.getElementById('inputAudioFile').value = ""; profileAudioElement.pause(); }
 
-            await supabaseClient.from('profiles').update(updateObj).eq('uid', currentUser.uid);
+            await supabaseClient.from('profiles').upsert([{ ...currentUser, ...updateObj }]);
             showToast("Kaldırıldı", "Dosya başarıyla sıfırlandı.", "🗑️");
         }
 
@@ -1110,7 +1110,7 @@
                 links.push({ title, url });
                 currentUser.links = links;
                 
-                await supabaseClient.from('profiles').update({ links: links }).eq('uid', currentUser.uid);
+                await supabaseClient.from('profiles').upsert([currentUser]);
                 renderLinks();
                 showToast("Başarılı", `${title} bağlantısı eklendi!`, "🔗");
             }
@@ -1120,7 +1120,7 @@
             let links = getSavedLinks(); links.splice(index, 1);
             currentUser.links = links;
             
-            await supabaseClient.from('profiles').update({ links: links }).eq('uid', currentUser.uid);
+            await supabaseClient.from('profiles').upsert([currentUser]);
             renderLinks(); showToast("Başarılı", "Bağlantı silindi!", "🗑️");
         }
 
@@ -1199,8 +1199,8 @@
             currentUser.blur = blur;
             currentUser.location = location;
 
-            // KESİN ÇÖZÜM: Supabase tablosunun primary key'i uid olduğu için sorgu kesinlikle uid üzerinden atılıyor
-            const { error } = await supabaseClient.from('profiles').update(updateData).eq('uid', currentUser.uid);
+            // UPSERT YÖNTEMİ: Primary key hatası vermeden veriyi direkt üzerine yazar
+            const { error } = await supabaseClient.from('profiles').upsert([currentUser]);
 
             if (error) {
                 showToast("Hata", "Kaydedilirken hata oluştu!", "❌");
