@@ -840,11 +840,13 @@
             const t = translations[currentLang] || translations['en'];
             document.getElementById('viewLocationDisplay').innerText = locationVal ? `📍 ${locationVal}` : t.noLocation;
 
+            // Veritabanındaki 'avatar' sütunu okunuyor
             let avatarEl = document.getElementById('viewAvatar');
-            if (user.avatar_url) { avatarEl.src = user.avatar_url; avatarEl.style.display = "block"; } else { avatarEl.style.display = "none"; }
+            if (user.avatar) { avatarEl.src = user.avatar; avatarEl.style.display = "block"; } else { avatarEl.style.display = "none"; }
 
+            // Veritabanındaki 'banner' sütunu okunuyor
             let bannerEl = document.getElementById('viewBanner');
-            if (user.banner_url) { bannerEl.src = user.banner_url; bannerEl.style.display = "block"; } else { bannerEl.style.display = "none"; }
+            if (user.banner) { bannerEl.src = user.banner; bannerEl.style.display = "block"; } else { bannerEl.style.display = "none"; }
 
             await applyProfileBackground(user);
 
@@ -954,8 +956,8 @@
             if (!currentUser) return;
             let updateObj = {};
             if (type === 'bg') { updateObj = { bg_url: null, bg_type: null }; currentUser.bg_url = null; document.getElementById('bgFileName').innerText = "Dosya yükle"; document.getElementById('inputBgFile').value = ""; }
-            else if (type === 'avatar') { updateObj = { avatar_url: null }; currentUser.avatar_url = null; document.getElementById('avatarFileName').innerText = "Dosya yükle"; document.getElementById('inputAvatarFile').value = ""; document.getElementById('sidebarAvatarImg').style.display = "none"; }
-            else if (type === 'banner') { updateObj = { banner_url: null }; currentUser.banner_url = null; document.getElementById('bannerFileName').innerText = "Dosya yükle"; document.getElementById('inputBannerFile').value = ""; }
+            else if (type === 'avatar') { updateObj = { avatar: null }; currentUser.avatar = null; document.getElementById('avatarFileName').innerText = "Dosya yükle"; document.getElementById('inputAvatarFile').value = ""; document.getElementById('sidebarAvatarImg').style.display = "none"; }
+            else if (type === 'banner') { updateObj = { banner: null }; currentUser.banner = null; document.getElementById('bannerFileName').innerText = "Dosya yükle"; document.getElementById('inputBannerFile').value = ""; }
             else if (type === 'audio') { updateObj = { audio_url: null }; currentUser.audio_url = null; document.getElementById('audioFileName').innerText = "Ses dosyası seç"; document.getElementById('inputAudioFile').value = ""; profileAudioElement.pause(); }
 
             await supabaseClient.from('profiles').update(updateObj).eq('uid', currentUser.uid);
@@ -1051,8 +1053,8 @@
 
             document.getElementById('sidebarUsernameText').innerText = currentUser.username;
             let sidebarAvatar = document.getElementById('sidebarAvatarImg');
-            if (currentUser.avatar_url) {
-                sidebarAvatar.src = currentUser.avatar_url;
+            if (currentUser.avatar) {
+                sidebarAvatar.src = currentUser.avatar;
                 sidebarAvatar.style.display = "block";
             } else {
                 sidebarAvatar.style.display = "none";
@@ -1176,8 +1178,8 @@
             if (tempAvatarFile) {
                 let url = await uploadFileToSupabase(tempAvatarFile, 'avatars');
                 if (url) { 
-                    updateData.avatar_url = url; 
-                    currentUser.avatar_url = url;
+                    updateData.avatar = url; // Veritabanındaki 'avatar' sütunu ile eşleştirildi
+                    currentUser.avatar = url;
                     document.getElementById('sidebarAvatarImg').src = url;
                     document.getElementById('sidebarAvatarImg').style.display = "block";
                 }
@@ -1185,7 +1187,10 @@
             }
             if (tempBannerFile) {
                 let url = await uploadFileToSupabase(tempBannerFile, 'banners');
-                if (url) { updateData.banner_url = url; currentUser.banner_url = url; }
+                if (url) { 
+                    updateData.banner = url; // Veritabanındaki 'banner' sütunu ile eşleştirildi
+                    currentUser.banner = url; 
+                }
                 tempBannerFile = null;
             }
             if (tempAudioFile) {
@@ -1199,8 +1204,8 @@
             currentUser.blur = blur;
             currentUser.location = location;
 
-            // KESİN ÇÖZÜM: Supabase update yerine doğrudan rpc veya eşleşen satırı upsert ile primary key üzerinden güncelliyoruz
-            const { error } = await supabaseClient.from('profiles').upsert({ uid: currentUser.uid, username: currentUser.username, password: currentUser.password, links: currentUser.links, ...updateData }, { onConflict: 'uid' });
+            // Supabase tablosundaki mevcut gerçek sütun adlarıyla güncelleme yapılıyor
+            const { error } = await supabaseClient.from('profiles').update(updateData).eq('uid', currentUser.uid);
 
             if (error) {
                 showToast("Hata", "Kaydedilirken hata oluştu!", "❌");
@@ -1224,8 +1229,8 @@
             document.getElementById('inputLocation').value = currentUser.location || "";
 
             if (currentUser.bg_url) document.getElementById('bgFileName').innerText = "Yüklendi ✓";
-            if (currentUser.avatar_url) document.getElementById('avatarFileName').innerText = "Yüklendi ✓";
-            if (currentUser.banner_url) document.getElementById('bannerFileName').innerText = "Yüklendi ✓";
+            if (currentUser.avatar) document.getElementById('avatarFileName').innerText = "Yüklendi ✓";
+            if (currentUser.banner) document.getElementById('bannerFileName').innerText = "Yüklendi ✓";
             if (currentUser.audio_url) document.getElementById('audioFileName').innerText = "Ses dosyası seç ✓";
         }
 
